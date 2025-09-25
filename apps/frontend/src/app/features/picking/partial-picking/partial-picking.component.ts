@@ -224,9 +224,9 @@ export class PartialPickingComponent implements OnInit {
   }
 
   onExit(): void {
-    // Navigate back or show confirmation dialog
-    if (confirm('Are you sure you want to exit? Any unsaved changes will be lost.')) {
-      this.router.navigate(['/dashboard']);
+    // Logout and show confirmation dialog
+    if (confirm('Are you sure you want to logout? Any unsaved changes will be lost.')) {
+      this.authService.logout();
     }
   }
 

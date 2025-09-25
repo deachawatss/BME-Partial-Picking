@@ -18,14 +18,6 @@ export const routes: Routes = [
     title: 'Login - PK System'
   },
 
-  // Dashboard route (protected)
-  {
-    path: 'dashboard',
-    loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard],
-    title: 'Dashboard - PK System'
-  },
 
   // Main Partial Picking route (protected) - Direct post-login destination
   {
@@ -36,25 +28,6 @@ export const routes: Routes = [
     title: 'Partial Picking - PK System'
   },
 
-  // Partial picking routes (protected)
-  {
-    path: 'picking',
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./features/picking/picking-list/picking-list.component').then(m => m.PickingListComponent),
-        title: 'Picking Runs - PK System'
-      },
-      {
-        path: ':runId',
-        loadComponent: () =>
-          import('./features/picking/picking-interface/picking-interface.component').then(m => m.PickingInterfaceComponent),
-        title: 'Partial Picking - PK System'
-      }
-    ]
-  },
 
   // Weight scale management (protected)
   {

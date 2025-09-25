@@ -1,16 +1,6 @@
 <!-- Main Container with Brown Theme Background -->
 <div class="partial-picking-container">
 
-  <!-- Title Bar -->
-  <div class="title-bar">
-    <div class="title-icon">⚖️</div>
-    <h1 class="title-text">Production Picking Pallet Assembly (Partial picking)</h1>
-    <div class="title-controls">
-      <button class="title-minimize">─</button>
-      <button class="title-maximize">□</button>
-      <button class="title-close" (click)="onExit()">✕</button>
-    </div>
-  </div>
 
   <!-- Main Content Area -->
   <div class="main-content" [formGroup]="partialPickingForm">
@@ -173,18 +163,6 @@
 
       </div>
 
-      <!-- Right Column: Status Indicators -->
-      <div class="status-column">
-        <div class="status-panel">
-          <div class="status-item">
-            <div class="status-label">*Intermediate</div>
-            <div class="status-icon intermediate">📊</div>
-          </div>
-          <div class="status-item">
-            <div class="status-icon finished">✅</div>
-          </div>
-        </div>
-      </div>
 
     </div>
 
@@ -201,7 +179,7 @@
           Save
         }
       </button>
-      <button class="action-button danger-action" (click)="onExit()">Exit</button>
+      <button class="action-button danger-action" (click)="onExit()">Logout</button>
     </div>
 
   </div>

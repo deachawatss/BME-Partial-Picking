@@ -68,8 +68,8 @@ export class GuestGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.authService.isAuthenticatedSync()) {
-      // User is already authenticated, redirect to dashboard
-      this.router.navigate(['/dashboard']);
+      // User is already authenticated, redirect to partial picking
+      this.router.navigate(['/partial-picking']);
       return false;
     }
 

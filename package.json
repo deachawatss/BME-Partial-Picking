@@ -1,0 +1,50 @@
+{
+  "name": "pk-system",
+  "version": "1.0.0",
+  "description": "PK (Partial Picking System) - Angular 20 + Rust + C# fullstack warehouse management application",
+  "scripts": {
+    "dev:all": "npm run dev:clean && concurrently --kill-others-on-fail \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:bridge\"",
+    "dev:clean": "bash scripts/kill-dev-processes.sh",
+    "dev:stop": "bash scripts/kill-dev-processes.sh",
+    "dev:frontend": "cd apps/frontend && npm start -- --port 6060 --host 0.0.0.0",
+    "dev:backend": "cd apps/backend && cargo run",
+    "dev:bridge": "cd apps/bridge-service && dotnet run",
+    "build:all": "npm run build:frontend && npm run build:backend && npm run build:bridge",
+    "build:frontend": "cd apps/frontend && npm run build:prod",
+    "build:backend": "cd apps/backend && cargo build --release",
+    "build:bridge": "cd apps/bridge-service && dotnet publish -c Release",
+    "test:all": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd apps/frontend && npm test",
+    "test:backend": "cd apps/backend && cargo test",
+    "test:e2e": "cd apps/frontend && npm run e2e",
+    "install:all": "npm run install:frontend && npm run install:backend && npm run install:bridge",
+    "install:frontend": "cd apps/frontend && npm install",
+    "install:backend": "cd apps/backend && cargo check",
+    "install:bridge": "cd apps/bridge-service && dotnet restore",
+    "lint:frontend": "cd apps/frontend && npm run lint",
+    "lint:backend": "cd apps/backend && cargo clippy",
+    "format:frontend": "cd apps/frontend && npm run format",
+    "format:backend": "cd apps/backend && cargo fmt"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "keywords": [
+    "warehouse",
+    "partial-picking",
+    "angular",
+    "rust",
+    "weight-scales",
+    "nwfth"
+  ],
+  "author": "NWFTH Development Team",
+  "license": "PROPRIETARY"
+}

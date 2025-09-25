@@ -29,7 +29,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Development Commands
 ```bash
 # Start all services in development mode (PRIMARY COMMAND)
-npm run dev:all
+npm run dev:all         # Kills existing processes, then starts all services
+
+# Process management
+npm run dev:clean       # Kill all development processes and free ports
+npm run dev:stop        # Same as dev:clean (alias)
 
 # Start individual services
 npm run dev:frontend    # Angular dev server on :6060

@@ -1,0 +1,217 @@
+<!-- Main Container with Brown Theme Background -->
+<div class="partial-picking-container">
+
+  <!-- Title Bar -->
+  <div class="title-bar">
+    <div class="title-icon">⚖️</div>
+    <h1 class="title-text">Production Picking Pallet Assembly (Partial picking)</h1>
+    <div class="title-controls">
+      <button class="title-minimize">─</button>
+      <button class="title-maximize">□</button>
+      <button class="title-close" (click)="onExit()">✕</button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-content" [formGroup]="partialPickingForm">
+
+    <!-- Top Section: Run Info -->
+    <div class="top-section">
+      <div class="run-info-section">
+        <div class="field-group">
+          <label class="field-label">Run No</label>
+          <div class="field-with-button">
+            <input type="text" class="field-input" formControlName="runNo" />
+            <button class="lookup-button" (click)="onLookup('runNo')">🔍</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Batch No</label>
+          <div class="field-with-button">
+            <input type="text" class="field-input" formControlName="batchNo" />
+            <button class="lookup-button" (click)="onLookup('batchNo')">🔍</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Item Key</label>
+          <div class="field-with-button">
+            <input type="text" class="field-input" formControlName="itemKey" />
+            <button class="lookup-button" (click)="onLookup('itemKey')">🔍</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Description</label>
+          <input type="text" class="field-input description-input" formControlName="description" />
+        </div>
+      </div>
+
+      <div class="header-info-section">
+        <div class="header-field">
+          <span class="header-label">FG Item Key</span>
+          <span class="header-value">{{ partialPickingData().fgItemKey }}</span>
+        </div>
+        <div class="header-description">
+          {{ partialPickingData().fgDescription }}
+        </div>
+        <div class="header-details">
+          <span class="header-label">Batches</span>
+          <span class="header-value">{{ partialPickingData().batches }}</span>
+          <span class="separator">@</span>
+          <span class="header-label">Production Date</span>
+          <span class="header-value">{{ partialPickingData().productionDate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Section: Batch Ticket Partials Table -->
+    <div class="middle-section">
+      <div class="table-container">
+        <div class="table-header">Batch Ticket Partials</div>
+        <div class="data-table">
+          <div class="table-header-row">
+            <div class="table-cell header-cell">Item</div>
+            <div class="table-cell header-cell">BatchNo</div>
+            <div class="table-cell header-cell">Partial</div>
+            <div class="table-cell header-cell">Weighted</div>
+            <div class="table-cell header-cell">Balance</div>
+          </div>
+          @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
+            <div class="table-data-row" (click)="onSelectBatchRow(i)"
+                 [class.selected-row]="item.item === 'INFULM01'">
+              <div class="table-cell data-cell">{{ item.item }}</div>
+              <div class="table-cell data-cell">{{ item.batchNo }}</div>
+              <div class="table-cell data-cell number-cell">{{ formatNumber(item.partial) }}</div>
+              <div class="table-cell data-cell number-cell">{{ formatNumber(item.weighted) }}</div>
+              <div class="table-cell data-cell number-cell">{{ formatNumber(item.balance) }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Input Fields and Controls -->
+    <div class="bottom-section">
+
+      <!-- Left Column: Input Fields -->
+      <div class="input-fields-column">
+
+        <div class="field-group">
+          <label class="field-label">Lot No.</label>
+          <div class="field-with-button">
+            <input type="text" class="field-input" formControlName="lotNo" />
+            <button class="lookup-button" (click)="onLookup('lotNo')">🔍</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Bin No.</label>
+          <div class="field-with-button">
+            <input type="text" class="field-input" formControlName="binNo" />
+            <button class="lookup-button" (click)="onLookup('binNo')">🔍</button>
+          </div>
+          <div class="bin-capacity">{{ partialPickingData().binCapacity }}</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Bag Weight</label>
+          <div class="field-with-button">
+            <input type="number" class="field-input number-input"
+                   formControlName="bagWeight"
+                   [value]="formatNumber(partialPickingData().bagWeight)" />
+            <button class="calculator-button" (click)="onCalculateBagWeight()">📟</button>
+          </div>
+        </div>
+
+        <div class="field-group weight-field">
+          <label class="field-label">Weight</label>
+          <div class="weight-input-container">
+            <input type="number" class="field-input number-input weight-input"
+                   formControlName="weight"
+                   [class]="getWeightStatusClass()"
+                   [value]="formatNumber(partialPickingData().weight)" />
+            <button class="fetch-weight-button"
+                    (click)="onFetchWeight()"
+                    [disabled]="isLoading()">
+              @if (isLoading()) {
+                <span class="loading-spinner"></span>
+              } @else {
+                Fetch Weight
+              }
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Weight Range</label>
+          <div class="weight-range-container">
+            <input type="number" class="field-input number-input range-input"
+                   formControlName="weightRangeMin"
+                   [value]="formatNumber(partialPickingData().weightRangeMin)" readonly />
+            <span class="range-separator">-</span>
+            <input type="number" class="field-input number-input range-input"
+                   formControlName="weightRangeMax"
+                   [value]="formatNumber(partialPickingData().weightRangeMax)" readonly />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Total Needed</label>
+          <input type="number" class="field-input number-input"
+                 formControlName="totalNeeded"
+                 [value]="formatNumber(partialPickingData().totalNeeded)" readonly />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Remaining Qty</label>
+          <input type="number" class="field-input number-input"
+                 formControlName="remainingQty"
+                 [value]="formatNumber(partialPickingData().remainingQty)" readonly />
+        </div>
+
+      </div>
+
+      <!-- Right Column: Status Indicators -->
+      <div class="status-column">
+        <div class="status-panel">
+          <div class="status-item">
+            <div class="status-label">*Intermediate</div>
+            <div class="status-icon intermediate">📊</div>
+          </div>
+          <div class="status-item">
+            <div class="status-icon finished">✅</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="action-button primary-action" (click)="onAddLot()">Add Lot</button>
+      <button class="action-button secondary-action" (click)="onViewLots()">View Lots</button>
+      <button class="action-button secondary-action" (click)="onPrint()">Print</button>
+      <button class="action-button primary-action" (click)="onSave()" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <span class="loading-spinner"></span>
+          Saving...
+        } @else {
+          Save
+        }
+      </button>
+      <button class="action-button danger-action" (click)="onExit()">Exit</button>
+    </div>
+
+  </div>
+
+  <!-- Error Message Display -->
+  @if (hasError()) {
+    <div class="error-message">
+      <span class="error-icon">⚠️</span>
+      {{ errorMessage() }}
+    </div>
+  }
+
+</div>

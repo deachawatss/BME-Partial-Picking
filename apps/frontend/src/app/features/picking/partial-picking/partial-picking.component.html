@@ -1,99 +1,104 @@
 <!-- Main Container with Brown Theme Background -->
 <div class="partial-picking-container">
 
-
-  <!-- Main Content Area - Grid Layout Following Original Design -->
-  <div class="main-content" [formGroup]="partialPickingForm">
-
-    <!-- Grid Layout: Left Fields + Right Headers/Table -->
-    <div class="partial-picking-grid">
-
-      <!-- Row 1: Run No + FG Item Key -->
-      <div class="field-left">
-        <label class="field-label">Run No</label>
-        <div class="field-with-button">
-          <input type="text" class="field-input wide-input" formControlName="runNo" />
+  <!-- Header Section with Run and FG Item Info -->
+  <div class="header-section" [formGroup]="partialPickingForm">
+    <!-- Row 1: Run No + FG Item Key -->
+    <div class="header-row">
+      <div class="header-field">
+        <label class="header-label">Run No</label>
+        <div class="header-input-group">
+          <input type="text" class="header-input" formControlName="runNo" />
           <button class="lookup-button" (click)="onLookup('runNo')">🔍</button>
         </div>
       </div>
-      <div class="field-right">
-        <label class="field-label">FG Item Key</label>
-        <span class="field-display">{{ partialPickingData().fgItemKey }}</span>
-        <span class="field-description">{{ partialPickingData().fgDescription }}</span>
+      <div class="header-field">
+        <label class="header-label">FG Item Key</label>
+        <span class="header-display">{{ partialPickingData().fgItemKey }}</span>
+        <span class="header-description">{{ partialPickingData().fgDescription }}</span>
       </div>
+    </div>
 
-      <!-- Row 2: Batch No + Batches Info -->
-      <div class="field-left">
-        <label class="field-label">Batch No</label>
-        <div class="field-with-button">
-          <input type="text" class="field-input wide-input" formControlName="batchNo" />
+    <!-- Row 2: Batch No + Batch Info -->
+    <div class="header-row">
+      <div class="header-field">
+        <label class="header-label">Batch No</label>
+        <div class="header-input-group">
+          <input type="text" class="header-input" formControlName="batchNo" />
           <button class="lookup-button" (click)="onLookup('batchNo')">🔍</button>
         </div>
       </div>
-      <div class="field-right">
-        <label class="field-label">Batches</label>
-        <span class="field-display">{{ partialPickingData().batches }}</span>
-        <span class="field-separator">@</span>
-        <span class="field-display">1.0000</span>
-        <span class="field-label">Production Date</span>
-        <span class="field-display">{{ partialPickingData().productionDate }}</span>
+      <div class="header-field batch-info">
+        <label class="header-label">Batches</label>
+        <span class="header-display">{{ partialPickingData().batches }}</span>
+        <span class="header-separator">@</span>
+        <span class="header-display">1.0000</span>
+        <label class="header-label">Production Date</label>
+        <span class="header-display">{{ partialPickingData().productionDate }}</span>
       </div>
+    </div>
+  </div>
 
-      <!-- Row 3: Item Key -->
-      <div class="field-left">
+  <!-- Main Content Area - Left Form Fields + Right Table -->
+  <div class="main-content" [formGroup]="partialPickingForm">
+
+    <!-- Left Column: Form Fields -->
+    <div class="form-section">
+
+      <!-- Item Key -->
+      <div class="form-field">
         <label class="field-label">Item Key</label>
-        <div class="field-with-button">
-          <input type="text" class="field-input wide-input" formControlName="itemKey" />
+        <div class="field-input-group">
+          <input type="text" class="field-input" formControlName="itemKey" />
           <button class="lookup-button" (click)="onLookup('itemKey')">🔍</button>
+          <input type="text" class="field-input readonly-field uom-field"
+                 formControlName="unitOfMeasure" readonly
+                 [value]="partialPickingData().unitOfMeasure" />
         </div>
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 4: Description -->
-      <div class="field-left">
+      <!-- Description -->
+      <div class="form-field">
         <label class="field-label">Description</label>
-        <input type="text" class="field-input description-input-compact" formControlName="description" />
+        <input type="text" class="field-input description-input" formControlName="description" />
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 5: Lot No -->
-      <div class="field-left">
+      <!-- Lot No -->
+      <div class="form-field">
         <label class="field-label">Lot No.</label>
-        <div class="field-with-button">
-          <input type="text" class="field-input wide-input" formControlName="lotNo" />
+        <div class="field-input-group">
+          <input type="text" class="field-input" formControlName="lotNo" />
           <button class="lookup-button" (click)="onLookup('lotNo')">🔍</button>
+          <span class="soh-label">SOH</span>
         </div>
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 6: Bin No -->
-      <div class="field-left">
+      <!-- Bin No -->
+      <div class="form-field">
         <label class="field-label">Bin No.</label>
-        <div class="field-with-button">
-          <input type="text" class="field-input wide-input" formControlName="binNo" />
+        <div class="field-input-group">
+          <input type="text" class="field-input" formControlName="binNo" />
           <button class="lookup-button" (click)="onLookup('binNo')">🔍</button>
+          <span class="bin-display">{{ partialPickingData().binSOHDisplay }}</span>
         </div>
-        <div class="bin-capacity">{{ partialPickingData().binCapacity }}</div>
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 7: Bag Weight -->
-      <div class="field-left">
+      <!-- Bag Weight -->
+      <div class="form-field">
         <label class="field-label">Bag Weight</label>
-        <div class="field-with-button">
-          <input type="number" class="field-input number-input wide-number"
+        <div class="field-input-group">
+          <input type="number" class="field-input number-input"
                  formControlName="bagWeight"
                  [value]="formatNumber(partialPickingData().bagWeight)" />
           <button class="calculator-button" (click)="onCalculateBagWeight()">📟</button>
         </div>
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 8: Weight -->
-      <div class="field-left weight-field">
+      <!-- Weight - Critical Field with Emphasis -->
+      <div class="form-field weight-field">
         <label class="field-label">Weight</label>
-        <div class="weight-input-container">
-          <input type="number" class="field-input number-input weight-input-wide"
+        <div class="weight-input-group">
+          <input type="number" class="field-input weight-input"
                  formControlName="weight"
                  [class]="getWeightStatusClass()"
                  [value]="formatNumber(partialPickingData().weight)" />
@@ -108,86 +113,87 @@
           </button>
         </div>
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 9: Weight Range -->
-      <div class="field-left">
+      <!-- Weight Range -->
+      <div class="form-field">
         <label class="field-label">Weight Range</label>
-        <div class="weight-range-container">
-          <input type="number" class="field-input number-input range-input-wide"
+        <div class="weight-range-group">
+          <input type="number" class="field-input range-input"
                  formControlName="weightRangeMin"
                  [value]="formatNumber(partialPickingData().weightRangeMin)" readonly />
           <span class="range-separator">-</span>
-          <input type="number" class="field-input number-input range-input-wide"
+          <input type="number" class="field-input range-input"
                  formControlName="weightRangeMax"
                  [value]="formatNumber(partialPickingData().weightRangeMax)" readonly />
         </div>
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 10: Total Needed -->
-      <div class="field-left">
+      <!-- Total Needed -->
+      <div class="form-field">
         <label class="field-label">Total Needed</label>
-        <input type="number" class="field-input number-input wide-number"
+        <input type="number" class="field-input number-input"
                formControlName="totalNeeded"
                [value]="formatNumber(partialPickingData().totalNeeded)" readonly />
       </div>
-      <!-- Table continues on right -->
 
-      <!-- Row 11: Remaining Qty -->
-      <div class="field-left">
+      <!-- Remaining Qty -->
+      <div class="form-field">
         <label class="field-label">Remaining Qty</label>
-        <input type="number" class="field-input number-input wide-number"
+        <input type="number" class="field-input number-input"
                formControlName="remainingQty"
                [value]="formatNumber(partialPickingData().remainingQty)" readonly />
       </div>
 
-      <!-- Table positioned in right column starting from Batches row -->
-      <div class="table-section-right">
-        <div class="table-container">
-          <div class="table-header">Batch Ticket Partials</div>
-          <div class="data-table">
-            <div class="table-header-row">
-              <div class="table-cell header-cell">Item</div>
-              <div class="table-cell header-cell">BatchNo</div>
-              <div class="table-cell header-cell">Partial</div>
-              <div class="table-cell header-cell">Weighted</div>
-              <div class="table-cell header-cell">Balance</div>
-              <div class="table-cell header-cell">Allergens</div>
-            </div>
-            @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
-              <div class="table-data-row" (click)="onSelectBatchRow(i)"
-                   [class.selected-row]="item.item === 'INFULM01'">
-                <div class="table-cell data-cell">{{ item.item }}</div>
-                <div class="table-cell data-cell">{{ item.batchNo }}</div>
-                <div class="table-cell data-cell number-cell">{{ formatNumber(item.partial) }}</div>
-                <div class="table-cell data-cell number-cell">{{ formatNumber(item.weighted) }}</div>
-                <div class="table-cell data-cell number-cell">{{ formatNumber(item.balance) }}</div>
-                <div class="table-cell data-cell">{{ item.allergens ?? 'None' }}</div>
-              </div>
-            }
+    </div>
+
+    <!-- Right Column: Batch Ticket Partials Table -->
+    <div class="table-section">
+      <div class="table-container">
+        <div class="table-header">Batch Ticket Partials</div>
+        <div class="table-status-tabs">
+          <span class="status-tab active">Pending to Picked</span>
+          <span class="status-tab">Picked</span>
+        </div>
+        <div class="data-table">
+          <div class="table-header-row">
+            <div class="table-cell header-cell">Item</div>
+            <div class="table-cell header-cell">BatchNo</div>
+            <div class="table-cell header-cell">Partial</div>
+            <div class="table-cell header-cell">Weighted</div>
+            <div class="table-cell header-cell">Balance</div>
+            <div class="table-cell header-cell">*</div>
           </div>
+          @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
+            <div class="table-data-row" (click)="onSelectBatchRow(i)"
+                 [class.selected-row]="item.item === 'INFULM01'">
+              <div class="table-cell data-cell">{{ item.item }}</div>
+              <div class="table-cell data-cell">{{ item.batchNo }}</div>
+              <div class="table-cell data-cell number-cell">{{ formatNumber(item.partial) }}</div>
+              <div class="table-cell data-cell number-cell">{{ formatNumber(item.weighted) }}</div>
+              <div class="table-cell data-cell number-cell">{{ formatNumber(item.balance) }}</div>
+              <div class="table-cell data-cell">{{ item.allergens ?? 'None' }}</div>
+            </div>
+          }
         </div>
       </div>
-
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button class="action-button primary-action" (click)="onAddLot()">Add Lot</button>
-      <button class="action-button secondary-action" (click)="onViewLots()">View Lots</button>
-      <button class="action-button secondary-action" (click)="onPrint()">Print</button>
-      <button class="action-button primary-action" (click)="onSave()" [disabled]="isLoading()">
-        @if (isLoading()) {
-          <span class="loading-spinner"></span>
-          Saving...
-        } @else {
-          Save
-        }
-      </button>
-      <button class="action-button danger-action" (click)="onExit()">Logout</button>
-    </div>
+  </div>
 
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="action-button" (click)="onAddLot()">Add Lot</button>
+    <button class="action-button" (click)="onViewLots()">View Lots</button>
+    <button class="action-button" (click)="onPrint()">Print</button>
+    <button class="action-button primary-action" (click)="onSave()" [disabled]="isLoading()">
+      @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Saving...
+      } @else {
+        Save
+      }
+    </button>
+    <button class="action-button danger-action" (click)="onExit()">Exit</button>
   </div>
 
   <!-- Error Message Display -->

@@ -1,0 +1,175 @@
+/* =================================================================== */
+/* NWFTH Brand Theme - Newly Weds Foods Thailand                     */
+/* Comprehensive brand colors and theme extensions                   */
+/* =================================================================== */
+
+/* Extended NWFTH Brand Colors */
+.text-nwfth-brown {
+  color: var(--color-brand-brown);
+}
+
+.text-nwfth-amber {
+  color: var(--color-brand-amber);
+}
+
+.text-nwfth-cream {
+  color: var(--color-brand-cream);
+}
+
+.bg-nwfth-brown {
+  background-color: var(--color-brand-brown);
+}
+
+.bg-nwfth-amber {
+  background-color: var(--color-brand-amber);
+}
+
+.bg-nwfth-cream {
+  background-color: var(--color-brand-cream);
+}
+
+/* Status Colors - Consistent with warehouse systems */
+.text-red-600 { color: #dc2626; }
+.text-red-800 { color: #991b1b; }
+.text-green-600 { color: #16a34a; }
+.text-green-800 { color: #166534; }
+.text-yellow-600 { color: #ca8a04; }
+.text-yellow-800 { color: #854d0e; }
+
+.bg-red-50 { background-color: #fef2f2; }
+.bg-red-100 { background-color: #fee2e2; }
+.bg-red-200 { background-color: #fecaca; }
+
+.bg-green-50 { background-color: #f0fdf4; }
+.bg-green-100 { background-color: #dcfce7; }
+.bg-green-200 { background-color: #bbf7d0; }
+
+.bg-yellow-50 { background-color: #fefce8; }
+.bg-yellow-100 { background-color: #fef3c7; }
+.bg-yellow-200 { background-color: #fde68a; }
+
+.border-red-200 { border-color: #fecaca; }
+.border-green-200 { border-color: #bbf7d0; }
+.border-yellow-200 { border-color: #fde68a; }
+
+/* Gradient Utilities - NWFTH Brand Gradients */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.from-nwfth-brown {
+  --tw-gradient-from: var(--color-brand-brown);
+  --tw-gradient-to: rgba(82, 51, 37, 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.via-nwfth-brown\/80 {
+  --tw-gradient-to: rgba(82, 51, 37, 0);
+  --tw-gradient-stops: var(--tw-gradient-from), rgba(82, 51, 37, 0.8), var(--tw-gradient-to);
+}
+
+.to-nwfth-brown\/90 {
+  --tw-gradient-to: rgba(82, 51, 37, 0.9);
+}
+
+/* NWFTH Connection Status Classes */
+.nwfth-status-connected {
+  border-color: #bbf7d0;
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.nwfth-status-disconnected {
+  border-color: #fecaca;
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.nwfth-status-connecting {
+  border-color: #fde68a;
+  background-color: #fefce8;
+  color: #854d0e;
+}
+
+.nwfth-indicator-connected {
+  background-color: #22c55e;
+}
+
+.nwfth-indicator-disconnected {
+  background-color: #ef4444;
+}
+
+.nwfth-indicator-connecting {
+  background-color: #f59e0b;
+}
+
+.nwfth-ping-connecting {
+  background-color: #fbbf24;
+}
+
+/* Warehouse-Specific Responsive Classes */
+.max-w-md { max-width: 28rem; }
+.max-w-lg { max-width: 32rem; }
+
+/* Width utilities for forms and components */
+.w-24 { width: 6rem; }
+.h-24 { height: 6rem; }
+.h-28 { height: 7rem; }
+.w-4 { width: 1rem; }
+.h-4 { height: 1rem; }
+.w-3 { width: 0.75rem; }
+.h-3 { height: 0.75rem; }
+
+/* Margin utilities */
+.ml-2 { margin-left: 0.5rem; }
+.ml-3 { margin-left: 0.75rem; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-6 { margin-top: 1.5rem; }
+
+/* Border utilities */
+.border-2 { border-width: 2px; }
+.border-t { border-top-width: 1px; }
+
+/* Animation utilities */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-ping {
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin,
+  .animate-ping,
+  .animate-gradient-morph,
+  .animate-particles-layer-1,
+  .animate-particles-layer-2,
+  .animate-particles-layer-3,
+  .animate-floating-orbs {
+    animation: none;
+  }
+}
+
+/* Additional state utilities */
+.opacity-60 { opacity: 0.6; }
+.cursor-not-allowed { cursor: not-allowed; }
+.whitespace-nowrap { white-space: nowrap; }
+
+/* Form validation colors */
+.text-red-500 { color: #ef4444; }

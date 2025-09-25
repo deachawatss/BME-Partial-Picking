@@ -1,23 +1,72 @@
-# Angular-Rust Partial Picking with Weight Scale Integration Product Requirements Document (PRD)
+# PK (Partial Picking System) Product Requirements Document
 
-## Goals and Background Context
+## Project Overview
 
-### Goals
-- **Modernize Partial Picking Interface**: Transform legacy PartialPickingInKG.exe into modern Angular web application matching Mobile-Rust UI standards
-- **Real-time Weight Scale Integration**: Seamless USB weight scale connectivity with live weight updates and automatic pick confirmation
-- **Multi-user Concurrent Operations**: Enable 10+ simultaneous workstations with dedicated weight scale sessions and conflict prevention
-- **Operational Efficiency Improvement**: Achieve 20% faster partial picking and 50% reduction in weight entry errors compared to current system
-- **Infrastructure Leverage**: Utilize existing proven components (ScaleLibrary.dll, 5-table database pattern, proven transaction workflow) to minimize implementation risk
+**PK System** modernizes the legacy PartialPickingInKG.exe into a web-based warehouse partial picking solution with real-time weight scale integration, built on Angular 20 + Rust + C# architecture.
 
-### Background Context
-The current partial picking system relies on legacy Windows desktop applications (PartialPickingInKG.exe) that, while functional, create operational limitations including single-user constraints, manual weight entry errors, and maintenance complexity. The successful Mobile-Rust bulk picking implementation has established a proven Angular 20 + Rust + SQL Server architecture that delivers modern web-based warehouse operations with excellent performance and user experience.
+### Goals Achieved
+- ✅ **Modern Angular 20 Interface**: Fully functional with NWFTH brown theme
+- ✅ **Component Architecture**: 3 main components with signal-based reactivity
+- ✅ **Modern CSS System**: Angular 20.3.2 + custom CSS architecture with performance optimization
+- 🚧 **Real-time Weight Integration**: Architecture designed, implementation in progress
+- 🚧 **Multi-user Operations**: Database schema planned for 10+ concurrent workstations
 
-This PRD extends that proven foundation to partial picking operations, specifically addressing the critical weight-based picking workflows that require real-time integration with USB weight scales across multiple concurrent workstations. The solution leverages existing infrastructure investments while delivering modern web-based user experience consistent with the Mobile-Rust interface standards.
+### Technology Implementation
+- **Frontend**: Angular 20.3.2 with modern `@if`/`@for` control flow syntax
+- **Styling**: Modern CSS architecture with NWFTH theme and component system
+- **State Management**: Angular 20 Signals for reactive data flow
+- **Build**: Angular CLI 20.3.3 + PostCSS with production optimization
 
 ### Change Log
-| Date | Version | Description | Author |
+| Date | Version | Description | Status |
 |------|---------|-------------|---------|
-| 2025-09-24 | 1.0 | Initial PRD creation from comprehensive brainstorming session and real transaction analysis | John (PM) |
+| 2025-09-24 | 1.0 | Initial PRD creation and requirements analysis | ✅ Completed |
+| 2025-09-25 | 1.1 | Angular 20 frontend implementation with 3 core components | ✅ Completed |
+| 2025-09-25 | 1.2 | Modern CSS architecture implementation with NWFTH theme | ✅ Completed |
+
+## Current Implementation Status
+
+### ✅ Completed Components
+
+#### 1. Picking List Component (`picking-list.component.ts`)
+- **Purpose**: Run selection and filtering interface
+- **Features**:
+  - Status-based filtering (NEW, IN_PROGRESS, COMPLETED)
+  - Visual priority indicators (HIGH, MEDIUM, LOW)
+  - Real-time progress tracking with item counts
+  - NWFTH brown theme integration
+- **Modern Angular 20**: Uses `@for` and `@if` control flow syntax
+- **State**: Angular 20 Signals for reactive filtering
+
+#### 2. Picking Interface Component (`picking-interface.component.ts`)
+- **Purpose**: Real-time picking workflow with weight scale integration
+- **Features**:
+  - Live weight display with WebSocket readiness
+  - Visual tolerance indicators with color-coded feedback
+  - Progress tracking across multiple items
+  - Lot number assignment and tracking
+  - Scale controls (tare, calibrate, record)
+- **Architecture**: Prepared for WebSocket weight updates
+- **State**: Signal-based reactive weight monitoring
+
+#### 3. Scale Management Component (`scale-management.component.ts`)
+- **Purpose**: Multi-scale monitoring and configuration
+- **Features**:
+  - Real-time connection status for multiple scales
+  - Scale calibration and testing capabilities
+  - Hardware information display (COM ports, firmware, battery)
+  - Workstation assignment and filtering
+- **Multi-Scale**: Ready for 10+ concurrent workstation operations
+
+### 🚧 In Progress
+- **Rust Backend**: Axum web framework with Tiberius SQL Server driver
+- **C# Bridge Service**: ScaleLibrary.dll integration for hardware communication
+- **Database Integration**: TFCPILOT3 connection and API endpoints
+
+### 📋 Next Phase
+- **WebSocket Implementation**: Real-time weight updates (≤100ms)
+- **Authentication**: LDAP + SQL Server integration
+- **Production Deployment**: Docker containerization and deployment scripts
 
 ## Requirements
 
@@ -52,6 +101,12 @@ This PRD extends that proven foundation to partial picking operations, specifica
 **FR14**: The system shall enable "Print" button only when all required ingredients in a run have been successfully picked and recorded in the 5-table transaction system
 
 **FR15**: The system shall generate multiple labels based on picking frequency, with each individual pick operation creating one corresponding label for complete traceability
+
+**FR16**: The system shall automatically detect USB weight scale connections via Windows Management Instrumentation (WMI) events and auto-register new scales in TFC_Weighup_Controllers and TFC_Weighup_WorkStations tables without manual configuration
+
+**FR17**: The system shall support multiple concurrent weight scales with different capacities (high-capacity, medium-capacity, precision scales) accessible from single workstations, with intelligent scale selection recommendations based on ingredient weight requirements
+
+**FR18**: The system shall provide real-time scale availability status and allow users to switch between connected scales during picking operations, with automatic failover suggestions when preferred scales become unavailable
 
 ### Non-Functional Requirements
 
@@ -151,7 +206,7 @@ PK app lives in `/PK/` folder as completely independent Angular-Rust application
 - **Environment Control**: All configurable database connections via .env files following Mobile-Rust patterns
 
 **Technology Stack Decisions:**
-- **Frontend**: Angular 20 + TypeScript + Tailwind CSS v4 (with `tw-` prefix) + shadcn/ui components
+- **Frontend**: Angular 20 + TypeScript + Modern CSS architecture with NWFTH component system
 - **Backend**: Rust + Axum framework + Tiberius SQL Server driver (matching Mobile-Rust exactly)
 - **Weight Scale Integration**: C# bridge service using ScaleLibrary.dll with HTTP/WebSocket API
 - **Database**: Microsoft SQL Server TFCPILOT3 unified architecture
@@ -177,10 +232,14 @@ PK app lives in `/PK/` folder as completely independent Angular-Rust application
 - **Scale Data Validation**: Input sanitization for all weight readings and tolerance values
 
 **Hardware Integration:**
-- **COM Port Management**: C# bridge service handles SerialPort connections via ScaleLibrary.dll
-- **Auto-Configuration**: Workstation detection via CLIENTNAME/COMPUTERNAME environment variables
-- **Scale Protocol**: "P" command polling every 400ms for real-time weight readings
-- **Error Recovery**: Automatic reconnection handling for scale communication failures
+- **Multi-Scale Support**: C# bridge service handles multiple COM port configurations (COM1, COM2, COM3, COM4, COM5) simultaneously across different scale types and capacities
+- **USB Auto-Detection**: Automatic detection and registration of newly connected weight scales using Windows WMI events
+- **Dynamic Scale Registration**: Plug-and-play scale setup with automatic database insertion into TFC_Weighup_Controllers and TFC_Weighup_WorkStations tables
+- **COM Port Management**: C# bridge service handles SerialPort connections via ScaleLibrary.dll with automatic COM port discovery
+- **Auto-Configuration**: Workstation detection via CLIENTNAME/COMPUTERNAME environment variables with automatic scale-to-workstation mapping
+- **Scale Protocol**: "P" command polling every 400ms for real-time weight readings across all connected scales
+- **Scale Selection Logic**: Users can select appropriate scale type based on ingredient weight requirements (high-capacity, medium-capacity, precision scales)
+- **Error Recovery**: Automatic reconnection handling for scale communication failures with scale failover capabilities
 
 ## Epic List
 
@@ -264,6 +323,22 @@ so that I can monitor scale weight in real-time during picking operations.
 5. Target weight and tolerance ranges displayed alongside current weight
 6. Connection status indicator shows scale communication health
 7. Interface responsive for both desktop and tablet viewing
+
+### Story 1.6: USB Auto-Detection and Multi-Scale Support
+As a warehouse IT administrator,
+I want weight scales to be automatically detected and configured when plugged into workstations,
+so that there is zero manual setup required and users can work with multiple scale types.
+
+**Acceptance Criteria:**
+1. C# bridge service detects USB scale connections via Windows WMI events automatically
+2. System tests new COM ports with ScaleLibrary.dll to identify valid weight scales
+3. Auto-generates ControllerID and inserts configuration into TFC_Weighup_Controllers table
+4. Updates TFC_Weighup_WorkStations table with current COMPUTERNAME to ControllerID mapping
+5. Angular frontend receives WebSocket notification when new scales become available
+6. Users can select from multiple available scales based on capacity requirements (high, medium, precision)
+7. System provides scale recommendations based on ingredient weight ranges
+8. Real-time scale availability status displayed with connection health indicators
+9. Plug-and-play operation requires zero manual database configuration or COM port setup
 
 ## Epic 2: Core Partial Picking Workflow
 

@@ -4,243 +4,290 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PK (Partial Picking System) is a greenfield Angular 20 + Rust + C# fullstack application that modernizes legacy PartialPickingInKG.exe into a web-based weight scale integrated picking system. The system follows Mobile-Rust architectural patterns while maintaining complete operational independence in the `/PK/` folder.
+**PK (Partial Picking System)** - A modern Angular 20.3.2 + Rust + C# fullstack application for warehouse partial picking operations with real-time weight scale integration. This system modernizes the legacy PartialPickingInKG.exe into a web-based solution that integrates with USB weight scales for precise ingredient picking workflows.
 
-## Required MCP Servers for Development
+### Technology Stack (Current Implementation)
+- **Frontend**: ✅ Angular 20.3.2 + TypeScript 5.9.2 + Modern CSS Architecture
+- **Styling**: ✅ Custom CSS with NWFTH theme + CSS custom properties + component system
+- **State Management**: ✅ Angular 20 Signals for reactive data flow
+- **Template Syntax**: ✅ Modern control flow (`@if`, `@for`, `@switch`)
+- **Components**: ✅ 3 fully functional standalone components
+- **Backend**: 🚧 Rust + Axum framework + Tiberius SQL Server driver (planned)
+- **Bridge Service**: 🚧 C# + .NET for ScaleLibrary.dll hardware integration (planned)
+- **Database**: Microsoft SQL Server (TFCPILOT3 primary, TFCLIVE fallback)
+- **Hardware**: USB weight scales via ScaleLibrary.dll COM port communication
+- **Theme**: ✅ NWFTH brown/amber brand theme with responsive design
 
-**Always use these MCP servers during development:**
-- **Context7 MCP**: For official Angular, Rust, and library documentation lookup
-- **SqlServer MCP**: For TFCPILOT3 database schema verification and queries
-- **Playwright MCP**: For E2E testing with login credentials: `deachawat / Wind@password9937`
+### Current Status
+- ✅ **Angular 20 Frontend**: Fully functional with picking workflows
+- ✅ **Modern CSS Architecture**: NWFTH brown theme with performance-optimized styling
+- ✅ **Build System**: Clean production builds with Angular CLI 20.3.3
+- 🚧 **Backend Services**: Rust and C# services in development phase
 
-## Critical Documentation Requirements
+## Commands
 
-**Before any development work, always read:**
-- `@docs/architecture.md` - Complete fullstack architecture and technical patterns
-- `@docs/prd.md` - Business requirements and exact database transaction specifications
-
-## Architecture Overview
-
-### Three-Tier Architecture
-- **Angular 20 Frontend** (:6060) - Real-time weight display, NWFTH brown/amber theme
-- **Rust Axum Backend** (:7070) - Business logic, database operations, WebSocket connections
-- **C# Bridge Service** (:5000) - Hardware integration with ScaleLibrary.dll for USB weight scales
-
-### Key Integration Points
-- **WebSocket**: Real-time weight updates (≤100ms response time requirement)
-- **5-Table Atomic Transactions**: cust_PartialPicked, Cust_PartialLotPicked, LotMaster, LotTransaction, Cust_PartialPalletLotPicked
-- **Hardware Protocol**: ScaleLibrary.dll COM port communication (9600 baud, "P" command polling every 400ms)
-
-## Technology Stack
-
-### Frontend (Angular 20)
-- **Framework**: Angular 20 with TypeScript 5.3+
-- **UI Library**: shadcn/ui with NWFTH brown theme
-- **Styling**: Tailwind CSS v4 with `tw-` prefix
-- **State Management**: Angular Signals
-- **Build**: Angular CLI with Webpack
-
-### Backend (Rust)
-- **Framework**: Axum 0.7+ for web services
-- **Database**: Tiberius driver for SQL Server
-- **Real-time**: WebSocket support for live weight updates
-- **Testing**: Built-in Rust testing framework
-
-### Hardware Integration (C#)
-- **Bridge Service**: C# console application exposing HTTP API
-- **Hardware Library**: ScaleLibrary.dll (existing, cannot modify)
-- **Protocol**: Serial port communication for weight scales
-
-### Database
-- **Primary**: TFCPILOT3 SQL Server (configurable via PRIMARY_DB env var)
-- **Scale Config**: TFCLIVE (required by ScaleLibrary.dll, hardcoded)
-- **Key Tables**: Cust_Partial* series, LotMaster, LotTransaction, INMAST (USER8/USER9 tolerances)
-
-## Development Commands
-
-Since this is a greenfield project, these commands will be implemented following Mobile-Rust patterns:
-
-### Setup and Development
+### Development Commands
 ```bash
-# Install dependencies (when implemented)
-npm install
-
-# Start all services in development mode (when implemented)
+# Start all services in development mode (PRIMARY COMMAND)
 npm run dev:all
 
-# Build production (when implemented)
-npm run build:all
+# Start individual services
+npm run dev:frontend    # Angular dev server on :6060
+npm run dev:backend     # Rust server on :7070
+npm run dev:bridge      # C# bridge service on :5000
 
-# Run frontend only (when implemented)
-npm run dev:frontend
+# Build commands
+npm run build:all       # Build all services
+npm run build:frontend  # ng build --configuration production
+npm run build:backend   # cargo build --release
+npm run build:bridge    # dotnet build
 
-# Run backend only (when implemented)
-npm run dev:backend
+# Testing commands
+npm run test:all        # All test suites
+npm run test:frontend   # Jest + Angular testing library
+npm run test:backend    # Rust built-in tests
+npm run test:e2e        # Playwright E2E tests
 ```
 
-### Testing
+### Individual Service Commands
 ```bash
-# Unit tests - Frontend (when implemented)
-npm run test:frontend
+# Frontend (Angular 20)
+cd frontend
+npm start               # Development server
+npm run build:prod      # Production build
+npm test               # Unit tests
+npm run lint           # ESLint + fix warnings
 
-# Unit tests - Backend (when implemented)
-cargo test
+# Backend (Rust)
+cd backend
+cargo run              # Development server
+cargo build --release # Production build
+cargo test            # Unit tests
+cargo clippy          # Linting - REQUIRED before commits
+cargo fmt             # Code formatting
 
-# E2E tests with Playwright (when implemented)
-npm run test:e2e
-
-# Integration tests (when implemented)
-npm run test:integration
+# Bridge Service (C#)
+cd bridge-service
+dotnet run            # Development server
+dotnet build          # Development build
+dotnet publish -c Release  # Production build
+dotnet format         # Code formatting
 ```
 
-### Quality Checks
+### Quality Check Commands (MANDATORY)
 ```bash
-# Lint frontend (when implemented) - MUST fix all warnings, never hide them
-npm run lint
+# Run before every commit/push - ALL must pass clean
+npm run lint:all       # Lint all services
+cargo clippy --all-targets --all-features  # Rust linting
+dotnet format --verify-no-changes          # C# formatting check
 
-# Lint backend (when implemented) - MUST fix all clippy warnings, never suppress
-cargo clippy
-
-# Type check (when implemented)
-npm run typecheck
-
-# Format code (when implemented)
-npm run format
+# Fix dead code detection
+cargo clippy -- -W dead_code              # Find dead Rust code
+npm run lint:unused                        # Find unused TypeScript/JS
 ```
 
-### Critical Quality Rules
-- **ALWAYS run linting before completing tasks** - `npm run lint` for frontend, `cargo clippy` for backend
-- **NEVER hide or suppress warnings** - All linting warnings MUST be fixed, not ignored
-- **Zero tolerance for lint violations** - No commits allowed with outstanding lint warnings
-- **Fix, don't suppress** - Address root cause of warnings rather than using suppress annotations
+## Architecture
 
-## Critical Database Implementation Details
-
-### 5-Table Transaction Pattern
-The system MUST implement this exact atomic transaction sequence:
-
-1. **cust_PartialPicked UPDATE**: Set `PickedPartialQty` (NOT PickedPartialQtyKG) using composite key (RunNo, RowNum, LineId)
-2. **Cust_PartialLotPicked INSERT**: Lot allocation with LotTranNo as primary key
-3. **LotMaster UPDATE**: Increment QtyCommitSales for inventory commitment
-4. **LotTransaction INSERT**: Audit trail with TransactionType = 5
-5. **Cust_PartialPalletLotPicked INSERT**: Pallet traceability record
-
-### Field Precision and Schema
-- **Weight Fields**: decimal(18,6) precision for all weight-related columns
-- **Primary Keys**: Composite keys (RunNo, RowNum, LineId) for cust_PartialPicked
-- **User Tracking**: PHUVIS format consistency across all tables
-- **Timezone**: Bangkok (UTC+7) for all timestamps
-
-## Weight Scale Integration Requirements
-
-### Hardware Configuration
-- **Auto-Detection**: Via CLIENTNAME/COMPUTERNAME environment variables
-- **Database Config**: TFC_Weighup_Controllers and TFC_Weighup_WorkStations tables
-- **COM Port Settings**: 9600 baud rate, configurable parity from database
-
-### Tolerance System (Dual Validation)
-- **Visual Feedback**: ScaleLibrary.dll progress bar (green/red) for operator guidance
-- **Business Validation**: INMAST.USER8/USER9 per-ItemKey tolerances for pick confirmation
-
-### Performance Requirements
-- **Response Time**: ≤100ms from scale to UI display
-- **Polling**: Every 400ms with "P" command
-- **Concurrent Users**: Support 10+ workstations simultaneously
-
-## NWFTH Brown Theme Standards
-
-### Color Palette (Mobile-Rust Compatible)
-```css
---color-brand-brown: #523325;    /* Dark Coffee Brown - Primary */
---color-brand-amber: #F0B429;    /* Golden Amber - Accent */
---color-brand-cream: #F5F5DC;    /* Soft Cream - Background */
+### Current Implementation Structure
+```
+PK/
+├── apps/
+│   └── frontend/           # ✅ Angular 20.3.2 PWA application
+│       ├── src/app/features/
+│       │   ├── picking/
+│       │   │   ├── picking-list/           # ✅ Run selection & filtering
+│       │   │   └── picking-interface/      # ✅ Real-time picking workflow
+│       │   ├── scales/
+│       │   │   └── scale-management/       # ✅ Multi-scale monitoring
+│       │   ├── auth/login/                 # ✅ Authentication component
+│       │   └── dashboard/                  # ✅ Main dashboard
+│       ├── src/core/
+│       │   ├── services/                   # ✅ HTTP, auth services
+│       │   └── guards/                     # ✅ Route protection
+│       └── src/styles/
+│           ├── globals.css                 # ✅ Main CSS entry with custom properties
+│           ├── themes/nwfth-theme.css      # ✅ NWFTH brown brand theme
+│           └── components/                 # ✅ Component-specific styles
+├── docs/                   # ✅ Updated documentation
+│   ├── architecture.md    # ✅ Concise architecture specification
+│   └── prd.md             # ✅ Updated requirements with implementation status
+├── package.json           # ✅ Root orchestration scripts
+└── .env                   # Environment configuration
 ```
 
-### Component Standards
-- **Touch Targets**: 44px minimum for warehouse tablets
-- **Typography**: Inter font family with consistent hierarchy
-- **Accessibility**: WCAG AA compliance
-- **Component Library**: shadcn/ui with NWFTH custom classes
+### Implemented Components (Angular 20)
+1. **Picking List** (`picking-list.component.ts`)
+   - Status filtering with Angular 20 signals
+   - Modern `@for` and `@if` control flow syntax
+   - Real-time progress tracking
+
+2. **Picking Interface** (`picking-interface.component.ts`)
+   - WebSocket-ready weight monitoring architecture
+   - Tolerance validation with visual feedback
+   - Session management for multi-item picking
+
+3. **Scale Management** (`scale-management.component.ts`)
+   - Multi-scale connection monitoring
+   - Hardware configuration and calibration UI
+   - Workstation assignment interface
+
+### Technology Highlights
+- **Modern CSS Architecture**: Component-based styling with CSS custom properties
+- **NWFTH Brown Theme**: Brand-consistent warehouse interface with performance optimization
+- **Angular 20 Signals**: Reactive state management throughout
+- **PostCSS Integration**: Modern build pipeline with compressed production builds
+- **Standalone Components**: No NgModules complexity
+- **Responsive Design**: Warehouse tablet optimization with mobile fallback
+
+### Port Configuration
+- Frontend: ✅ http://localhost:6060 (fully functional)
+- Backend: 🚧 http://localhost:7070 (Rust Axum - planned)
+- Bridge Service: 🚧 http://localhost:5000 (C# - planned)
+
+## Database Integration
+
+### Primary Database Architecture
+- **TFCPILOT3**: Primary database for all read-write operations
+- **TFCLIVE**: Fallback/scale configuration source if needed
+- **Connection**: Tiberius SQL Server driver from Rust backend
+
+### Key Database Tables
+- `Cust_PartialRun`: Main partial picking runs
+- `cust_PartialPicked`: Individual picked items with quantities
+- `INMAST`: Item master with tolerance values (USER8/USER9)
+- `TFC_Weighup_Controllers`: Scale hardware configuration
+- `TFC_Weighup_WorkStations`: Workstation scale assignments
+- `LotMaster` & `LotTransaction`: Lot tracking and transactions
+
+### Field Name Convention
+- Database uses **PascalCase** field names (e.g., `PickedPartialQty`, `RunNo`, `LineId`)
+- Always verify actual schema using SQL Server MCP during development
+
+## MCP Server Requirements
+
+### Always Use During Development
+- **context7**: For official library documentation and framework patterns
+- **sqlserver**: For database schema verification, queries, and table inspection
+- **sequential-thinking**: For complex analysis and systematic problem solving
+
+### Database Inspection Commands
+```bash
+# Use these MCP commands frequently during development
+mcp__sqlserver__describe_table('Cust_PartialRun')
+mcp__sqlserver__describe_table('cust_PartialPicked')
+mcp__sqlserver__list_tables()
+mcp__sqlserver__read_query("SELECT TOP 5 * FROM Cust_PartialRun WHERE Status = 'NEW'")
+```
+
+## Weight Scale Integration
+
+### Hardware Communication Flow
+1. **USB Detection**: Windows WMI events detect scale connections
+2. **COM Port Communication**: ScaleLibrary.dll handles 9600 baud, "P" command polling
+3. **C# Bridge Service**: Isolates hardware layer, provides HTTP/WebSocket APIs
+4. **Rust Backend**: Coordinates multi-scale sessions and business logic
+5. **Angular Frontend**: Real-time weight display with WebSocket updates
+
+### Scale Configuration
+- Scales auto-register in `TFC_Weighup_Controllers` table
+- Workstation assignments in `TFC_Weighup_WorkStations`
+- Multiple concurrent scales supported per workstation
+- Scale capacity recommendations based on ingredient weight ranges
+
+## Development Guidelines
+
+### Critical Rules - READ FIRST
+- **Documentation Consistency**: ALWAYS read `docs/architecture.md` before starting any development work
+- **Documentation Updates**: If code changes contradict documentation, update docs immediately to match implementation
+- **Single Command Development**: Always use `npm run dev:all` - never run separate cargo/npm commands
+- **Quality Gates**: ALWAYS run lint, clippy (Rust), and fix ALL warnings - never ignore, suppress, or hide warnings
+- **Dead Code Policy**: Remove ALL dead code immediately - no unused functions, variables, or imports allowed
+- **Warning Policy**: Fix ALL compilation warnings immediately - never ignore or suppress
+- **Database Schema Verification**: Always use sqlserver MCP to verify field names and types
+- **Real-time Testing**: Test weight scale integration with actual hardware when possible
+
+### Code Standards
+- **Frontend**: Follow Angular 20 + TypeScript best practices with NWFTH brown theme
+- **Backend**: Rust with proper error handling, async/await patterns
+- **Bridge Service**: C# with COM port management and WebSocket communication
+- **Database**: Use parameterized queries, proper transaction handling
+
+### Testing Requirements
+- **Unit Tests**: Jest (Angular), built-in Rust testing, xUnit (.NET)
+- **Integration Tests**: Database transaction testing, weight scale communication
+- **E2E Tests**: Playwright for complete user workflows
+- **Hardware Tests**: Manual validation with actual USB weight scales
 
 ## Environment Configuration
 
 ### Required Environment Variables
 ```bash
-# Primary database (NEVER hardcode TFCPILOT3)
+# Database Configuration
 PRIMARY_DB=TFCPILOT3
-
-# Scale configuration database (hardcoded in ScaleLibrary.dll)
 SCALE_DB=TFCLIVE
+DB_SERVER=192.168.0.86
+DB_PORT=49381
 
-# Service ports
+# Service Ports
 FRONTEND_PORT=6060
 BACKEND_PORT=7070
 BRIDGE_SERVICE_PORT=5000
 
 # Authentication
-LDAP_SERVER=<ldap_server>
-LDAP_DOMAIN=<domain>
+LDAP_SERVER=ldap://192.168.0.1
+JWT_SECRET=your_jwt_secret
+
+# Hardware Configuration
+DEFAULT_SCALE_BAUD_RATE=9600
+WEIGHT_POLLING_INTERVAL_MS=400
+WEBSOCKET_MAX_RESPONSE_TIME=100
 ```
 
-## Testing Strategy
+### Development vs Production
+- **Development**: Use npm run dev:all for unified development server
+- **Production**: Separate builds required - frontend (ng build), backend (cargo build --release), bridge service (dotnet publish)
 
-### E2E Testing with Playwright
-- **Login Credentials**: deachawat / Wind@password9937
-- **Test Scenarios**: Complete partial picking workflows
-- **Hardware Simulation**: Mock weight scale responses for automated testing
-- **Multi-User**: Concurrent workstation simulation
+## Key Business Logic (Current Implementation)
 
-### Critical Test Coverage
-- **Transaction Integrity**: 5-table atomic operations under stress
-- **Weight Scale Communication**: Hardware integration with actual devices
-- **Concurrency**: 10+ simultaneous users without conflicts
-- **Performance**: ≤100ms weight reading requirements
+### ✅ Implemented Frontend Workflows
 
-## Development Guidelines
+#### Picking List Workflow (`picking-list.component.ts`)
+1. **Status Filtering**: Filter runs by NEW, IN_PROGRESS, COMPLETED status
+2. **Priority Display**: Visual HIGH/MEDIUM/LOW priority indicators
+3. **Progress Tracking**: Real-time item counts and completion status
+4. **Navigation**: Click-to-navigate to picking interface
 
-### Code Organization
-- **Frontend**: `/frontend/src/` - Angular components, services, and assets
-- **Backend**: `/backend/src/` - Rust services, database repositories, and API handlers
-- **Bridge Service**: `/bridge/` - C# weight scale integration service
-- **Documentation**: `/docs/` - Architecture, PRD, and implementation guides
+#### Picking Interface Workflow (`picking-interface.component.ts`)
+1. **Real-time Weight Display**: Live weight updates (WebSocket architecture ready)
+2. **Tolerance Validation**: Visual color-coded feedback system
+3. **Item Progress**: Multi-item session with completion tracking
+4. **Scale Controls**: Tare, calibrate, and recording functionality
+5. **Lot Assignment**: Input fields for lot number tracking
 
-### Database Schema Verification
-- **Always verify field names, types, and constraints using SqlServer MCP**
-- **Case-sensitive field matching** required for SQL Server compatibility
-- **Primary key validation** for all transaction operations
-- **Decimal precision** verification for weight calculations
+#### Scale Management Workflow (`scale-management.component.ts`)
+1. **Multi-Scale Monitoring**: Real-time connection status for 10+ scales
+2. **Hardware Configuration**: COM port, capacity, and firmware display
+3. **Workstation Assignment**: Scale-to-workstation mapping
+4. **Calibration Interface**: Scale testing and calibration controls
 
-### Commit Standards
-- **Professional Messages**: Descriptive, without AI signatures
-- **Atomic Commits**: Single logical changes per commit
-- **Mobile-Rust Pattern**: Follow established commit message patterns
+### 🚧 Planned Backend Integration
+- **Database Transactions**: 5-table atomic pattern with TFCPILOT3
+- **Weight Validation**: INMAST.USER8/USER9 tolerance ranges
+- **Session Management**: Multi-user workstation coordination
+- **Label Generation**: 4x4 thermal label printing
 
-## Project Structure (When Implemented)
+### Modern Angular 20 Features Used
+- **Signals**: Reactive state for weight updates and filtering
+- **Control Flow**: `@if` and `@for` syntax for cleaner templates
+- **Standalone**: No NgModule complexity
+- **TypeScript 5.9**: Latest language features
 
-```
-/PK/
-├── frontend/               # Angular 20 application
-│   ├── src/app/           # Components, services, guards
-│   ├── src/assets/        # NWFTH themed assets
-│   └── tailwind.config.js # Brown theme configuration
-├── backend/               # Rust Axum server
-│   ├── src/api/          # REST endpoints and WebSocket handlers
-│   ├── src/database/     # Repository pattern with Tiberius
-│   └── src/models/       # Business logic and data structures
-├── bridge/                # C# weight scale service
-│   ├── ScaleService/     # Console application
-│   └── ScaleLibrary.dll  # Existing hardware library
-├── docs/                  # Architecture and business requirements
-│   ├── architecture.md   # Complete technical architecture
-│   └── prd.md           # Product requirements and specifications
-└── scripts/               # Build and deployment automation
-```
+## Mobile-Rust Pattern Reference
 
-## Key Success Factors
+This project follows proven patterns from the existing Mobile-Rust bulk picking system located in `/docs/Mobile-Rust/`. Key references:
+- **NWFTH Brown Theme**: Consistent color palette and component styling
+- **Database Patterns**: Similar SQL Server integration and transaction handling
+- **Development Workflow**: Same npm run dev:all pattern and build processes
+- **Authentication**: LDAP + SQL Server dual authentication approach
 
-1. **Follow Mobile-Rust Patterns**: Proven architecture, avoid reinventing solutions
-2. **Hardware-First Approach**: Weight scale integration drives core functionality
-3. **Database Schema Compliance**: Exact field matching for existing partial picking data
-4. **Real-Time Performance**: WebSocket architecture for ≤100ms response times
-5. **Multi-User Concurrency**: Session management for 10+ simultaneous workstations
-6. **NWFTH Brand Consistency**: Brown/amber theme matching existing Mobile-Rust interface
+Note: Mobile-Rust is a reference implementation - PK system is completely independent with no code dependencies.

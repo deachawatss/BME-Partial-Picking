@@ -1,6 +1,4 @@
-// PK Backend - Rust Axum Server
-// Placeholder implementation for development
-
+// PK Backend - Rust Axum Server with Authentication
 use axum::{
     http::StatusCode,
     response::Json,
@@ -9,29 +7,71 @@ use axum::{
 };
 use serde_json::{json, Value};
 use tower_http::cors::CorsLayer;
+use tracing::info;
+
+mod ldap_service;
+mod sql_auth_service;
+mod jwt_service;
+mod auth_handlers;
+
+use ldap_service::LdapService;
+use sql_auth_service::SqlAuthService;
+use jwt_service::JwtService;
+use auth_handlers::{login_handler, health_handler, test_connections_handler, validate_token_handler};
+
+// Application state
+#[derive(Clone)]
+pub struct AppState {
+    pub ldap_service: LdapService,
+    pub sql_auth_service: SqlAuthService,
+    pub jwt_service: JwtService,
+}
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Load environment variables
+    dotenv::dotenv().ok();
+
     // Initialize tracing
     tracing_subscriber::fmt::init();
+
+    // Initialize services
+    let ldap_service = LdapService::new()?;
+    let sql_auth_service = SqlAuthService::new()?;
+    let jwt_service = JwtService::new()?;
+
+    // Create shared application state
+    let app_state = AppState {
+        ldap_service,
+        sql_auth_service,
+        jwt_service,
+    };
 
     // Build our application with routes
     let app = Router::new()
         .route("/", get(root))
-        .route("/api/health", get(health_check))
-        .route("/api/auth/login", post(mock_login))
+        .route("/api/health", get(health_handler))
+        .route("/api/auth/login", post(login_handler))
+        .route("/api/auth/validate", post(validate_token_handler))
+        .route("/api/test/connections", get(test_connections_handler))
+        // Keep mock endpoints for now
         .route("/api/runs", get(mock_runs))
         .route("/api/weight/current", get(mock_weight))
         .route("/api/weight/fetch", post(mock_fetch_weight))
-        .layer(CorsLayer::permissive());
+        .layer(CorsLayer::permissive())
+        .with_state(app_state);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:7070").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:7070").await?;
 
-    tracing::info!("🦀 PK Backend server listening on http://0.0.0.0:7070");
-    tracing::info!("📊 Health check: http://localhost:7070/api/health");
-    tracing::info!("🔐 Mock login: POST http://localhost:7070/api/auth/login");
+    info!("🦀 PK Backend server listening on http://0.0.0.0:7070");
+    info!("📊 Health check: http://localhost:7070/api/health");
+    info!("🔐 Authentication: POST http://localhost:7070/api/auth/login");
+    info!("🔧 Connection test: GET http://localhost:7070/api/test/connections");
+    info!("🎫 Token validation: POST http://localhost:7070/api/auth/validate");
 
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app).await?;
+
+    Ok(())
 }
 
 // Basic route handlers

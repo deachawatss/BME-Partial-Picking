@@ -22,24 +22,18 @@ export class AuthGuard implements CanActivate {
     // Check if user is authenticated synchronously first
     if (this.authService.isAuthenticatedSync()) {
 
-      // Check if session is about to expire
-      if (this.authService.isSessionExpiringSoon()) {
-        console.log('Session expiring soon, attempting refresh');
-
-        // Try to refresh token
-        return this.authService.refreshToken().pipe(
-          map(() => true),
-          catchError(() => {
-            // Refresh failed, redirect to login
-            this.redirectToLogin(state.url);
-            return of(false);
-          })
-        );
+      // Check if session is still valid (token not expired)
+      if (this.authService.isValidSession()) {
+        // User is authenticated with valid token
+        this.authService.updateLastActivity();
+        return true;
+      } else {
+        // Token expired, logout and redirect to login
+        console.log('Token expired, redirecting to login');
+        this.authService.logout();
+        this.redirectToLogin(state.url);
+        return false;
       }
-
-      // User is authenticated and session is valid
-      this.authService.updateLastActivity();
-      return true;
     }
 
     // User is not authenticated, redirect to login

@@ -1,0 +1,1519 @@
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./src/styles/themes/nwfth-theme.css ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/* =================================================================== */
+/* NWFTH Brand Theme - Newly Weds Foods Thailand                     */
+/* Comprehensive brand colors and theme extensions                   */
+/* =================================================================== */
+
+/* Extended NWFTH Brand Colors */
+.text-nwfth-brown {
+  color: var(--color-brand-brown);
+}
+
+.text-nwfth-amber {
+  color: var(--color-brand-amber);
+}
+
+.text-nwfth-cream {
+  color: var(--color-brand-cream);
+}
+
+.bg-nwfth-brown {
+  background-color: var(--color-brand-brown);
+}
+
+.bg-nwfth-amber {
+  background-color: var(--color-brand-amber);
+}
+
+.bg-nwfth-cream {
+  background-color: var(--color-brand-cream);
+}
+
+/* Status Colors - Consistent with warehouse systems */
+.text-red-600 { color: #dc2626; }
+.text-red-800 { color: #991b1b; }
+.text-green-600 { color: #16a34a; }
+.text-green-800 { color: #166534; }
+.text-yellow-600 { color: #ca8a04; }
+.text-yellow-800 { color: #854d0e; }
+
+.bg-red-50 { background-color: #fef2f2; }
+.bg-red-100 { background-color: #fee2e2; }
+.bg-red-200 { background-color: #fecaca; }
+
+.bg-green-50 { background-color: #f0fdf4; }
+.bg-green-100 { background-color: #dcfce7; }
+.bg-green-200 { background-color: #bbf7d0; }
+
+.bg-yellow-50 { background-color: #fefce8; }
+.bg-yellow-100 { background-color: #fef3c7; }
+.bg-yellow-200 { background-color: #fde68a; }
+
+.border-red-200 { border-color: #fecaca; }
+.border-green-200 { border-color: #bbf7d0; }
+.border-yellow-200 { border-color: #fde68a; }
+
+/* Gradient Utilities - NWFTH Brand Gradients */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.from-nwfth-brown {
+  --tw-gradient-from: var(--color-brand-brown);
+  --tw-gradient-to: rgba(82, 51, 37, 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.via-nwfth-brown\/80 {
+  --tw-gradient-to: rgba(82, 51, 37, 0);
+  --tw-gradient-stops: var(--tw-gradient-from), rgba(82, 51, 37, 0.8), var(--tw-gradient-to);
+}
+
+.to-nwfth-brown\/90 {
+  --tw-gradient-to: rgba(82, 51, 37, 0.9);
+}
+
+/* NWFTH Connection Status Classes */
+.nwfth-status-connected {
+  border-color: #bbf7d0;
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.nwfth-status-disconnected {
+  border-color: #fecaca;
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.nwfth-status-connecting {
+  border-color: #fde68a;
+  background-color: #fefce8;
+  color: #854d0e;
+}
+
+.nwfth-indicator-connected {
+  background-color: #22c55e;
+}
+
+.nwfth-indicator-disconnected {
+  background-color: #ef4444;
+}
+
+.nwfth-indicator-connecting {
+  background-color: #f59e0b;
+}
+
+.nwfth-ping-connecting {
+  background-color: #fbbf24;
+}
+
+/* Warehouse-Specific Responsive Classes */
+.max-w-md { max-width: 28rem; }
+.max-w-lg { max-width: 32rem; }
+
+/* Width utilities for forms and components */
+.w-24 { width: 6rem; }
+.h-24 { height: 6rem; }
+.h-28 { height: 7rem; }
+.w-4 { width: 1rem; }
+.h-4 { height: 1rem; }
+.w-3 { width: 0.75rem; }
+.h-3 { height: 0.75rem; }
+
+/* Margin utilities */
+.ml-2 { margin-left: 0.5rem; }
+.ml-3 { margin-left: 0.75rem; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-6 { margin-top: 1.5rem; }
+
+/* Border utilities */
+.border-2 { border-width: 2px; }
+.border-t { border-top-width: 1px; }
+
+/* Animation utilities */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-ping {
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin,
+  .animate-ping,
+  .animate-gradient-morph,
+  .animate-particles-layer-1,
+  .animate-particles-layer-2,
+  .animate-particles-layer-3,
+  .animate-floating-orbs {
+    animation: none;
+  }
+}
+
+/* Additional state utilities */
+.opacity-60 { opacity: 0.6; }
+.cursor-not-allowed { cursor: not-allowed; }
+.whitespace-nowrap { white-space: nowrap; }
+
+/* Form validation colors */
+.text-red-500 { color: #ef4444; }
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./src/styles/components/cards.css ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/* =================================================================== */
+/* Card Components - NWFTH Design System                            */
+/* Clean, accessible card designs for warehouse applications         */
+/* =================================================================== */
+
+.nwfth-card {
+  background-color: hsl(var(--color-background));
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--color-border));
+  box-shadow: var(--shadow-soft);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
+}
+
+.nwfth-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+/* Login Form Container - Specialized card for authentication */
+.login-form-container {
+  background-color: hsl(var(--color-background));
+  border: 1px solid hsl(var(--color-border) / 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Card Variants */
+.nwfth-card-elevated {
+  box-shadow: var(--shadow-large);
+  border: none;
+}
+
+.nwfth-card-flat {
+  box-shadow: none;
+  border: 1px solid hsl(var(--color-border));
+}
+
+.nwfth-card-outline {
+  background-color: transparent;
+  border: 2px solid hsl(var(--color-border));
+  box-shadow: none;
+}
+
+/* Interactive Card States */
+.nwfth-card-interactive {
+  cursor: pointer;
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.nwfth-card-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+.nwfth-card-interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Card Header */
+.nwfth-card-header {
+  padding: 1rem 1rem 0.5rem 1rem;
+  border-bottom: 1px solid hsl(var(--color-border));
+}
+
+/* Card Content */
+.nwfth-card-content {
+  padding: 1rem;
+}
+
+/* Card Footer */
+.nwfth-card-footer {
+  padding: 0.5rem 1rem 1rem 1rem;
+  border-top: 1px solid hsl(var(--color-border));
+  background-color: hsl(var(--color-muted) / 0.3);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* Status Cards */
+.nwfth-card-success {
+  border-left: 4px solid #22c55e;
+  background-color: #f0fdf4;
+}
+
+.nwfth-card-warning {
+  border-left: 4px solid #f59e0b;
+  background-color: #fefce8;
+}
+
+.nwfth-card-error {
+  border-left: 4px solid #ef4444;
+  background-color: #fef2f2;
+}
+
+.nwfth-card-info {
+  border-left: 4px solid var(--color-brand-amber);
+  background-color: hsl(var(--color-muted) / 0.5);
+}
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./src/styles/components/buttons.css ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/* =================================================================== */
+/* Button Components - NWFTH Design System                          */
+/* Accessible, warehouse-optimized button designs                   */
+/* =================================================================== */
+
+/* Base Button Styles */
+.nwfth-button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: var(--radius);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+  cursor: pointer;
+  border: 1px solid transparent;
+
+  /* Accessibility */
+  outline: none;
+
+  /* Touch optimization for warehouse tablets */
+  min-height: 44px;
+  padding: 0.75rem 1.5rem;
+}
+
+.nwfth-button-base:focus-visible {
+  outline: 2px solid hsl(var(--color-accent));
+  outline-offset: 2px;
+}
+
+.nwfth-button-base:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary Button - NWFTH Brown */
+.nwfth-button-primary {
+  background-color: var(--color-brand-brown);
+  color: var(--color-brand-cream);
+  font-weight: 600;
+  border: 1px solid var(--color-brand-brown);
+}
+
+.nwfth-button-primary:hover:not(:disabled) {
+  background-color: hsl(var(--color-primary) / 0.9);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+.nwfth-button-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-soft);
+}
+
+.nwfth-button-primary:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--color-accent) / 0.5);
+}
+
+/* Secondary Button - Muted with Amber Hover */
+.nwfth-button-secondary {
+  background-color: hsl(var(--color-muted));
+  color: hsl(var(--color-foreground));
+  border: 1px solid hsl(var(--color-border));
+  font-weight: 500;
+}
+
+.nwfth-button-secondary:hover:not(:disabled) {
+  background-color: var(--color-brand-amber);
+  color: hsl(var(--color-foreground));
+  border-color: var(--color-brand-amber);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+.nwfth-button-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Outline Button */
+.nwfth-button-outline {
+  background-color: transparent;
+  color: var(--color-brand-brown);
+  border: 2px solid var(--color-brand-brown);
+  font-weight: 500;
+}
+
+.nwfth-button-outline:hover:not(:disabled) {
+  background-color: var(--color-brand-brown);
+  color: var(--color-brand-cream);
+}
+
+/* Ghost Button */
+.nwfth-button-ghost {
+  background-color: transparent;
+  color: hsl(var(--color-foreground));
+  border: 1px solid transparent;
+}
+
+.nwfth-button-ghost:hover:not(:disabled) {
+  background-color: hsl(var(--color-muted));
+  border-color: hsl(var(--color-border));
+}
+
+/* Danger Button */
+.nwfth-button-danger {
+  background-color: #ef4444;
+  color: white;
+  border: 1px solid #ef4444;
+}
+
+.nwfth-button-danger:hover:not(:disabled) {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Success Button */
+.nwfth-button-success {
+  background-color: #22c55e;
+  color: white;
+  border: 1px solid #22c55e;
+}
+
+.nwfth-button-success:hover:not(:disabled) {
+  background-color: #16a34a;
+  border-color: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Button Sizes */
+.nwfth-button-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  min-height: 36px;
+}
+
+.nwfth-button-lg {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  min-height: 48px;
+}
+
+.nwfth-button-xl {
+  padding: 1.25rem 2.5rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  min-height: 56px;
+}
+
+/* Button Groups */
+.nwfth-button-group {
+  display: inline-flex;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.nwfth-button-group .nwfth-button-base {
+  border-radius: 0;
+  border-right-width: 0;
+}
+
+.nwfth-button-group .nwfth-button-base:first-child {
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+}
+
+.nwfth-button-group .nwfth-button-base:last-child {
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  border-right-width: 1px;
+}
+
+/* Icon Buttons */
+.nwfth-button-icon {
+  padding: 0.75rem;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.nwfth-button-icon-sm {
+  padding: 0.5rem;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+/* Loading State */
+.nwfth-button-loading {
+  position: relative;
+  color: transparent;
+}
+
+.nwfth-button-loading::after {
+  content: '';
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+/* Touch Optimization for Warehouse Displays */
+@media (min-width: 1024px) {
+  /* Desktop/Tablet - Larger targets for better usability */
+  .nwfth-button-base {
+    min-height: 44px;
+  }
+
+  .nwfth-button-sm {
+    min-height: 36px;
+  }
+
+  .nwfth-button-lg {
+    min-height: 48px;
+  }
+
+  .nwfth-button-xl {
+    min-height: 56px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .nwfth-button-primary,
+  .nwfth-button-secondary,
+  .nwfth-button-outline {
+    border-width: 2px;
+  }
+
+  .nwfth-button-primary:focus-visible,
+  .nwfth-button-secondary:focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--color-accent) / 0.8);
+  }
+}
+
+/* Touch-specific improvements */
+.min-h-touch {
+  min-height: 44px;
+}
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./src/styles/components/inputs.css ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/* =================================================================== */
+/* Input Components - NWFTH Design System                           */
+/* Accessible, warehouse-optimized form controls                    */
+/* =================================================================== */
+
+/* Base Input Styles */
+.nwfth-input {
+  display: flex;
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--color-border));
+  background-color: hsl(var(--color-background));
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: hsl(var(--color-foreground));
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+
+  /* Touch optimization */
+  min-height: 44px;
+
+  /* File input support - Custom file input styling */
+}
+
+.nwfth-input::placeholder {
+  color: hsl(var(--color-muted-foreground));
+  opacity: 1;
+}
+
+/* Focus States - Enhanced for accessibility */
+.nwfth-input:focus,
+.nwfth-input:focus-visible {
+  outline: none;
+  border-color: var(--color-brand-amber);
+  box-shadow: 0 0 0 2px hsl(var(--color-accent) / 0.2);
+  ring: 2px solid hsl(var(--color-accent));
+  ring-offset: 2px;
+}
+
+/* Enhanced focus for better accessibility */
+.nwfth-input:focus-visible {
+  border-color: var(--color-brand-amber);
+  box-shadow: 0 0 0 3px hsl(var(--color-accent) / 0.3);
+  outline: 2px solid hsl(var(--color-accent));
+  outline-offset: 2px;
+}
+
+/* Read-only State */
+.nwfth-input:read-only {
+  background-color: hsl(var(--color-muted));
+  color: hsl(var(--color-muted-foreground));
+  cursor: not-allowed;
+}
+
+/* Disabled State */
+.nwfth-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: hsl(var(--color-muted));
+}
+
+/* Input Variants */
+.nwfth-input-sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  min-height: 36px;
+}
+
+.nwfth-input-lg {
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  min-height: 48px;
+}
+
+/* Input States */
+.nwfth-input-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.nwfth-input-error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.nwfth-input-success {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.nwfth-input-warning {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+/* Textarea */
+.nwfth-textarea {
+  min-height: 80px;
+  resize: vertical;
+  padding: 0.75rem;
+}
+
+/* Select */
+.nwfth-select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.nwfth-select:focus {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23F0B429' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+}
+
+/* Checkbox */
+.nwfth-checkbox {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid hsl(var(--color-border));
+  background-color: hsl(var(--color-background));
+  cursor: pointer;
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.nwfth-checkbox:checked {
+  background-color: var(--color-brand-brown);
+  border-color: var(--color-brand-brown);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z'/%3E%3C/svg%3E");
+}
+
+.nwfth-checkbox:focus {
+  border-color: var(--color-brand-amber);
+  box-shadow: 0 0 0 2px hsl(var(--color-accent) / 0.2);
+}
+
+/* Radio Button */
+.nwfth-radio {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  border: 1px solid hsl(var(--color-border));
+  background-color: hsl(var(--color-background));
+  cursor: pointer;
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.nwfth-radio:checked {
+  background-color: var(--color-brand-brown);
+  border-color: var(--color-brand-brown);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3C/svg%3E");
+}
+
+.nwfth-radio:focus {
+  border-color: var(--color-brand-amber);
+  box-shadow: 0 0 0 2px hsl(var(--color-accent) / 0.2);
+}
+
+/* Input Group */
+.nwfth-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nwfth-input-group .nwfth-input {
+  padding-right: 2.5rem;
+}
+
+.nwfth-input-group .nwfth-input-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: hsl(var(--color-muted-foreground));
+  pointer-events: none;
+}
+
+/* Form Labels */
+.nwfth-label {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: hsl(var(--color-foreground));
+  margin-bottom: 0.5rem;
+}
+
+.nwfth-label-required::after {
+  content: "*";
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+/* Form Groups */
+.nwfth-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.nwfth-form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Error Messages */
+.nwfth-error-message {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: #ef4444;
+}
+
+/* Help Text */
+.nwfth-help-text {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: hsl(var(--color-muted-foreground));
+}
+
+/* Responsive Adjustments for Warehouse Displays */
+@media (min-width: 1024px) {
+  .nwfth-input,
+  .nwfth-select,
+  .nwfth-textarea {
+    min-height: 44px;
+  }
+
+  .nwfth-input-sm {
+    min-height: 36px;
+  }
+
+  .nwfth-input-lg {
+    min-height: 48px;
+  }
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  .nwfth-input {
+    border-width: 2px;
+  }
+
+  .nwfth-input:focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--color-brand-amber) / 0.5);
+  }
+
+  .nwfth-checkbox,
+  .nwfth-radio {
+    border-width: 2px;
+  }
+}
+
+/* Dark Mode Support (future-proofing) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: 222.2 84% 4.9%;
+    --color-foreground: 210 40% 98%;
+    --color-muted: 217.2 32.6% 17.5%;
+    --color-muted-foreground: 215 20.2% 65.1%;
+    --color-border: 217.2 32.6% 17.5%;
+  }
+}
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./src/styles/components/animations.css ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/* =================================================================== */
+/* Animation Components - NWFTH Design System                       */
+/* Performance-optimized animations for warehouse applications      */
+/* =================================================================== */
+
+/* =================================================================== */
+/* Background Animation Classes - Based on Mobile-Rust              */
+/* =================================================================== */
+
+/* Gradient Morphing Background */
+.animate-gradient-morph {
+  background: linear-gradient(-45deg, #523325, #6B4423, #523325, #7A4D28);
+  background-size: 400% 400%;
+  animation: gradientMorph 8s ease-in-out infinite;
+  will-change: background-position;
+}
+
+/* Multi-layer Particle System */
+.animate-particles-layer-1::before,
+.animate-particles-layer-2::before,
+.animate-particles-layer-3::before {
+  content: '';
+  position: absolute;
+  background: rgba(240, 180, 41, 0.3);
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+
+.animate-particles-layer-1::before {
+  width: 4px;
+  height: 4px;
+  animation: particlesLayer1 15s linear infinite;
+  left: 10%;
+  top: 100%;
+}
+
+.animate-particles-layer-2::before {
+  width: 6px;
+  height: 6px;
+  background: rgba(240, 180, 41, 0.2);
+  animation: particlesLayer2 20s linear infinite;
+  left: 80%;
+  top: 100%;
+}
+
+.animate-particles-layer-3::before {
+  width: 3px;
+  height: 3px;
+  background: rgba(240, 180, 41, 0.4);
+  animation: particlesLayer3 25s linear infinite;
+  left: 50%;
+  top: 100%;
+}
+
+/* Floating Orbs */
+.animate-floating-orbs::before {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(240, 180, 41, 0.08) 0%, transparent 60%);
+  border-radius: 50%;
+  animation: floatingOrbs 12s ease-in-out infinite;
+  left: 20%;
+  top: 30%;
+  will-change: transform, opacity;
+}
+
+/* =================================================================== */
+/* Keyframe Definitions                                              */
+/* =================================================================== */
+
+@keyframes gradientMorph {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes particlesLayer1 {
+  0% {
+    transform: translateY(100vh) translateX(-10px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(10px);
+    opacity: 0;
+  }
+}
+
+@keyframes particlesLayer2 {
+  0% {
+    transform: translateY(100vh) translateX(10px);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(-10px);
+    opacity: 0;
+  }
+}
+
+@keyframes particlesLayer3 {
+  0% {
+    transform: translateY(100vh) translateX(-5px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(5px);
+    opacity: 0;
+  }
+}
+
+@keyframes floatingOrbs {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.1;
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.3;
+  }
+  66% {
+    transform: translateY(10px) translateX(-10px);
+    opacity: 0.2;
+  }
+}
+
+/* =================================================================== */
+/* UI Component Animations                                           */
+/* =================================================================== */
+
+/* Fade In/Out */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* Slide Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp var(--animation-duration-normal) var(--animation-easing);
+}
+
+.animate-slide-in-down {
+  animation: slideInDown var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* Scale Animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--animation-duration-fast) var(--animation-easing);
+}
+
+.animate-scale-out {
+  animation: scaleOut var(--animation-duration-fast) var(--animation-easing);
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0,0,0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Shake Animation - For error states */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* =================================================================== */
+/* Loading Animations                                                */
+/* =================================================================== */
+
+/* Spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Dots Loading */
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-dots::before,
+.animate-dots::after {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: dotPulse 1.5s infinite ease-in-out;
+}
+
+.animate-dots::before {
+  animation-delay: -0.32s;
+  margin-right: 0.25rem;
+}
+
+.animate-dots::after {
+  animation-delay: -0.16s;
+  margin-left: 0.25rem;
+}
+
+/* =================================================================== */
+/* Hover Effects                                                     */
+/* =================================================================== */
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  transition: transform var(--animation-duration-fast) var(--animation-easing);
+}
+
+.hover-grow:hover {
+  transform: scale(1.05);
+  transition: transform var(--animation-duration-fast) var(--animation-easing);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(240, 180, 41, 0.3);
+  transition: box-shadow var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* =================================================================== */
+/* Accessibility & Performance                                       */
+/* =================================================================== */
+
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-gradient-morph,
+  .animate-particles-layer-1,
+  .animate-particles-layer-2,
+  .animate-particles-layer-3,
+  .animate-floating-orbs {
+    animation: none;
+  }
+
+  .hover-lift:hover,
+  .hover-grow:hover {
+    transform: none;
+  }
+}
+
+/* Performance optimizations */
+.animate-gpu {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Delay utilities */
+.animation-delay-1 { animation-delay: 0.1s; }
+.animation-delay-2 { animation-delay: 0.2s; }
+.animation-delay-3 { animation-delay: 0.3s; }
+.animation-delay-4 { animation-delay: 0.4s; }
+.animation-delay-5 { animation-delay: 0.5s; }
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./src/styles/globals.css?ngGlobalStyle ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/* =================================================================== */
+/* PK (Partial Picking System) - Modern CSS Architecture              */
+/* Angular 20 + Standard CSS with NWFTH Brown Theme                  */
+/* Based on Mobile-Rust proven patterns and Angular best practices   */
+/* =================================================================== */
+
+/* CSS Custom Properties - NWFTH Brand Theme */
+:root {
+  /* NWFTH Brand Colors */
+  --color-brand-brown: #523325;
+  --color-brand-amber: #F0B429;
+  --color-brand-cream: #F5F5DC;
+
+  /* HSL Color System for better CSS manipulation */
+  --color-brand-brown-hsl: 20 50% 25%;
+  --color-brand-amber-hsl: 43 87% 56%;
+  --color-brand-cream-hsl: 60 56% 91%;
+
+  /* Semantic Color System */
+  --color-background: 0 0% 100%;
+  --color-foreground: 25 65% 15%;
+  --color-muted: 60 30% 97%;
+  --color-muted-foreground: 25 40% 35%;
+  --color-border: 25 20% 85%;
+  --color-accent: var(--color-brand-amber-hsl);
+  --color-primary: var(--color-brand-brown-hsl);
+
+  /* Design System Variables */
+  --radius: 0.5rem;
+  --shadow-soft: 0 2px 8px rgba(60, 36, 21, 0.08);
+  --shadow-medium: 0 4px 12px rgba(60, 36, 21, 0.12);
+  --shadow-large: 0 8px 24px rgba(60, 36, 21, 0.15);
+
+  /* Animation Variables */
+  --animation-duration-fast: 0.15s;
+  --animation-duration-normal: 0.3s;
+  --animation-duration-slow: 0.5s;
+  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =================================================================== */
+/* Base Styles - Modern CSS Reset                                     */
+/* =================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-color: hsl(var(--color-border));
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+               'Roboto', sans-serif;
+  background-color: hsl(var(--color-background));
+  color: hsl(var(--color-foreground));
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Enhanced Focus Styles for Accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--color-brand-amber-hsl));
+  outline-offset: 2px;
+}
+
+/* Form Elements Inheritance */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Button Reset */
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Link Reset */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =================================================================== */
+/* Utility Classes - Essential Layout & Spacing                       */
+/* =================================================================== */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only:focus,
+.sr-only:active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0.5rem 1rem !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+  background: hsl(var(--color-background)) !important;
+  color: hsl(var(--color-foreground)) !important;
+  border: 2px solid hsl(var(--color-accent)) !important;
+  border-radius: var(--radius) !important;
+  z-index: 9999 !important;
+}
+
+/* =================================================================== */
+/* Essential Flexbox & Grid Utilities                                 */
+/* =================================================================== */
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.inset-0 {
+  inset: 0;
+}
+
+/* =================================================================== */
+/* Spacing System                                                     */
+/* =================================================================== */
+
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+
+.space-y-2 > * + * { margin-top: 0.5rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+
+/* =================================================================== */
+/* Responsive Breakpoints & Text                                      */
+/* =================================================================== */
+
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+.text-center { text-align: center; }
+
+/* =================================================================== */
+/* Color Utilities                                                    */
+/* =================================================================== */
+
+.text-foreground {
+  color: hsl(var(--color-foreground));
+}
+
+.text-muted-foreground {
+  color: hsl(var(--color-muted-foreground));
+}
+
+.bg-background {
+  background-color: hsl(var(--color-background));
+}
+
+.bg-muted {
+  background-color: hsl(var(--color-muted));
+}
+
+.border {
+  border-width: 1px;
+}
+
+.border-border {
+  border-color: hsl(var(--color-border));
+}
+
+.rounded {
+  border-radius: var(--radius);
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* =================================================================== */
+/* Transitions                                                        */
+/* =================================================================== */
+
+.transition-all {
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.transition-colors {
+  transition: color var(--animation-duration-fast) var(--animation-easing),
+              background-color var(--animation-duration-fast) var(--animation-easing),
+              border-color var(--animation-duration-fast) var(--animation-easing);
+}
+
+/* =================================================================== */
+/* Z-Index System                                                     */
+/* =================================================================== */
+
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-50 { z-index: 50; }
+
+/* =================================================================== */
+/* Responsive Design - Warehouse Display Optimization                 */
+/* =================================================================== */
+
+/* Mobile Warning - Hidden on desktop */
+@media (min-width: 1024px) {
+  .mobile-warning {
+    display: none !important;
+  }
+}
+
+/* Mobile/Tablet - Emergency access only */
+@media (max-width: 1023px) {
+  .mobile-warning {
+    display: block;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 0.875rem;
+    border-radius: var(--radius);
+    background-color: var(--color-brand-amber);
+    color: var(--color-brand-brown);
+  }
+}
+
+/* =================================================================== */
+/* Import Component Styles                                            */
+/* =================================================================== */
+
+/*# sourceMappingURL=styles.css.map*/

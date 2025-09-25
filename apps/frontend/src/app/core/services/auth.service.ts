@@ -4,27 +4,34 @@ import { Observable, of, throwError, BehaviorSubject, timer } from 'rxjs';
 import { catchError, map, tap, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
+// Authentication Token Interface
+interface AuthToken {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  expires_at: number;
+  user_id: string;
+  username: string;
+}
+
 // Authentication Response Interface
 interface AuthResponse {
   success: boolean;
   message: string;
-  token?: string;
-  user?: {
-    id: string;
-    username: string;
-    displayName: string;
-    workstationId?: string;
-    roles?: string[];
-  };
+  token?: AuthToken;
+  user?: User;
 }
 
 // User Interface
 interface User {
   id: string;
   username: string;
-  displayName: string;
-  workstationId?: string;
-  roles?: string[];
+  display_name: string;
+  email: string;
+  department: string;
+  auth_source: string;
+  workstation_id?: string;
+  app_permissions: string[];
 }
 
 // Connection Status Type
@@ -36,8 +43,9 @@ type ConnectionStatus = 'unknown' | 'connected' | 'disconnected';
 export class AuthService {
   private readonly API_BASE = 'http://localhost:7070/api';
   private readonly TOKEN_KEY = 'pk_auth_token';
+  private readonly TOKEN_DATA_KEY = 'pk_auth_token_data';
   private readonly USER_KEY = 'pk_auth_user';
-  private readonly SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+  private readonly SESSION_TIMEOUT = 7 * 24 * 60 * 60 * 1000; // 1 week (matches backend)
 
   // Angular 20 Signals for reactive state management
   private _isAuthenticated = signal<boolean>(false);
@@ -52,8 +60,14 @@ export class AuthService {
 
   // Computed properties
   public readonly isConnected = computed(() => this._connectionStatus() === 'connected');
-  public readonly userDisplayName = computed(() => this._currentUser()?.displayName || '');
-  public readonly workstationId = computed(() => this._currentUser()?.workstationId || '');
+  public readonly userDisplayName = computed(() => this._currentUser()?.display_name || '');
+  public readonly workstationId = computed(() => this._currentUser()?.workstation_id || '');
+  public readonly userDepartment = computed(() => this._currentUser()?.department || '');
+  public readonly authSource = computed(() => this._currentUser()?.auth_source || '');
+  public readonly hasPermission = computed(() => (permission: string) => {
+    const permissions = this._currentUser()?.app_permissions || [];
+    return permissions.includes(permission) || permissions.includes('1'); // Admin permission
+  });
 
   // Session management
   private sessionTimer?: ReturnType<typeof setTimeout>;
@@ -72,16 +86,25 @@ export class AuthService {
    */
   private initializeAuth(): void {
     const token = localStorage.getItem(this.TOKEN_KEY);
+    const tokenDataJson = localStorage.getItem(this.TOKEN_DATA_KEY);
     const userJson = localStorage.getItem(this.USER_KEY);
 
-    if (token && userJson) {
+    if (token && tokenDataJson && userJson) {
       try {
-        const user = JSON.parse(userJson);
-        this._isAuthenticated.set(true);
-        this._currentUser.set(user);
-        this.setupSessionTimeout();
+        const tokenData: AuthToken = JSON.parse(tokenDataJson);
+        const user: User = JSON.parse(userJson);
+
+        // Check if token is still valid
+        if (this.isTokenValid(tokenData)) {
+          this._isAuthenticated.set(true);
+          this._currentUser.set(user);
+          this.setupSessionTimeout(tokenData);
+        } else {
+          console.warn('Stored token has expired, clearing auth data');
+          this.clearAuthData();
+        }
       } catch (error) {
-        console.error('Failed to parse stored user data:', error);
+        console.error('Failed to parse stored auth data:', error);
         this.clearAuthData();
       }
     }
@@ -94,16 +117,16 @@ export class AuthService {
     const loginData = {
       username: username.trim(),
       password: password,
-      workstationId: this.getWorkstationId()
+      workstation_id: this.getWorkstationId()
     };
 
     return this.http.post<AuthResponse>(`${this.API_BASE}/auth/login`, loginData).pipe(
       tap(response => {
         if (response.success && response.token && response.user) {
-          this.setAuthData(response.token, response.user);
+          this.storeAuthData(response.token, response.user);
           this._isAuthenticated.set(true);
           this._currentUser.set(response.user);
-          this.setupSessionTimeout();
+          this.setupSessionTimeout(response.token);
           this.updateLastActivity();
         }
       }),
@@ -182,7 +205,8 @@ export class AuthService {
    */
   updateLastActivity(): void {
     this.lastActivity.next(new Date());
-    this.setupSessionTimeout();
+    // For 1-week tokens, we don't need to reset timeout on activity
+    // Token expiry is fixed at issue time
   }
 
   /**
@@ -198,8 +222,9 @@ export class AuthService {
   /**
    * Store authentication data securely
    */
-  private setAuthData(token: string, user: User): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+  private storeAuthData(token: AuthToken, user: User): void {
+    localStorage.setItem(this.TOKEN_KEY, token.access_token);
+    localStorage.setItem(this.TOKEN_DATA_KEY, JSON.stringify(token));
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }
 
@@ -208,21 +233,39 @@ export class AuthService {
    */
   private clearAuthData(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.TOKEN_DATA_KEY);
     localStorage.removeItem(this.USER_KEY);
   }
 
   /**
    * Setup session timeout monitoring
    */
-  private setupSessionTimeout(): void {
+  private setupSessionTimeout(tokenData?: AuthToken): void {
     this.clearSessionTimeout();
 
-    this.sessionTimer = setTimeout(() => {
-      console.log('Session timeout - logging out');
-      this.logout();
-    }, this.SESSION_TIMEOUT);
+    let expirationTime: number;
 
-    this._sessionTimeout.set(Date.now() + this.SESSION_TIMEOUT);
+    if (tokenData) {
+      // Use token expiration time
+      expirationTime = tokenData.expires_at * 1000; // Convert to milliseconds
+    } else {
+      // Fallback to session timeout
+      expirationTime = Date.now() + this.SESSION_TIMEOUT;
+    }
+
+    const timeUntilExpiry = Math.max(0, expirationTime - Date.now());
+
+    if (timeUntilExpiry > 0) {
+      this.sessionTimer = setTimeout(() => {
+        console.log('Token expired - logging out');
+        this.logout();
+      }, timeUntilExpiry);
+
+      this._sessionTimeout.set(expirationTime);
+    } else {
+      // Token already expired
+      this.logout();
+    }
   }
 
   /**
@@ -316,5 +359,54 @@ export class AuthService {
    */
   isSessionExpiringSoon(): boolean {
     return this.getRemainingSessionTime() <= 5;
+  }
+
+  /**
+   * Check if token is still valid
+   */
+  private isTokenValid(tokenData: AuthToken): boolean {
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+    const expiresAt = tokenData.expires_at;
+    const timeUntilExpiry = expiresAt - now;
+
+    // Token is expired
+    if (timeUntilExpiry <= 0) {
+      console.warn('🕐 JWT token has expired');
+      return false;
+    }
+
+    // Show warning if token expires in less than 1 day
+    if (timeUntilExpiry < 86400) { // 24 hours in seconds
+      const hoursLeft = Math.floor(timeUntilExpiry / 3600);
+      console.warn(`⚠️ Token will expire in ${hoursLeft} hours`);
+    }
+
+    return true;
+  }
+
+  /**
+   * Get stored token data
+   */
+  getStoredTokenData(): AuthToken | null {
+    const tokenDataJson = localStorage.getItem(this.TOKEN_DATA_KEY);
+    if (tokenDataJson) {
+      try {
+        return JSON.parse(tokenDataJson);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Check if current session is valid
+   */
+  isValidSession(): boolean {
+    const tokenData = this.getStoredTokenData();
+    const user = this._currentUser();
+    const token = this.getToken();
+
+    return !!(token && tokenData && user && this.isTokenValid(tokenData));
   }
 }

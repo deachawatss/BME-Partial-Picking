@@ -37,7 +37,19 @@
       </div>
     </div>
 
-
+    <!-- Authentication Info -->
+    @if (isConnected()) {
+      <div class="nwfth-info-box">
+        <p class="nwfth-info-title">🔐 Dual Authentication Available</p>
+        <ul class="nwfth-auth-methods">
+          <li>✅ <strong>LDAP/Active Directory</strong> - For domain users</li>
+          <li>✅ <strong>Local Database</strong> - For local accounts</li>
+        </ul>
+        <p class="nwfth-info-note">
+          The system will automatically detect and use the appropriate authentication method based on your user configuration.
+        </p>
+      </div>
+    }
 
     <!-- Login Form -->
     <form

@@ -1,4 +1,79 @@
 /* =================================================================== */
+/* PK (Partial Picking System) - CSS Architecture Documentation      */
+/* =================================================================== */
+/*
+ * ARCHITECTURE OVERVIEW:
+ * =====================
+ *
+ * This CSS system follows a hierarchical, modular architecture optimized
+ * for maintainability, performance, and developer experience.
+ *
+ * FILE STRUCTURE:
+ * ──────────────
+ *
+ * 1. globals.css (THIS FILE)
+ *    ├── CSS Custom Properties (Design tokens)
+ *    ├── Modern CSS Reset
+ *    ├── Global Focus System
+ *    ├── Utility Classes (Layout, Spacing, Typography)
+ *    └── Component Imports
+ *
+ * 2. themes/nwfth-theme.css
+ *    ├── NWFTH Brand Colors
+ *    ├── Semantic Status Colors (HSL format)
+ *    ├── Connection Status Classes
+ *    └── Animation Keyframes
+ *
+ * 3. components/ (Design System Components)
+ *    ├── buttons.css     - Button variants and states
+ *    ├── inputs.css      - Form controls and validation
+ *    ├── cards.css       - Card layouts and interactions
+ *    └── animations.css  - Animation library and keyframes
+ *
+ * 4. Component-specific styles
+ *    ├── login.component.css         - Login form enhancements
+ *    └── partial-picking.component.css - Legacy component styles
+ *
+ * NAMING CONVENTIONS:
+ * ==================
+ *
+ * CSS Custom Properties: --color-semantic-variant
+ * Component Classes:     .nwfth-component-variant
+ * Utility Classes:       .utility-name
+ * State Classes:         .state-name (hover, focus, active)
+ *
+ * COLOR SYSTEM:
+ * ============
+ *
+ * All colors use HSL format with CSS custom properties:
+ * - Brand Colors:  --color-brand-* (brown, amber, cream)
+ * - Semantic:      --color-semantic-* (primary, accent, foreground)
+ * - Status:        --color-status-* (danger, success, warning, info)
+ *
+ * FOCUS SYSTEM:
+ * ============
+ *
+ * Global :focus-visible provides consistent accessibility
+ * Component-specific focus variants available via semantic classes
+ *
+ * ANIMATION STANDARDS:
+ * ===================
+ *
+ * All animations respect prefers-reduced-motion
+ * Keyframes defined once in animations.css, referenced globally
+ * Performance-optimized with will-change and transform3d
+ *
+ * MAINTENANCE GUIDELINES:
+ * ======================
+ *
+ * 1. Always add new colors to CSS custom properties
+ * 2. Use semantic naming over descriptive naming
+ * 3. Follow BEM methodology for component classes
+ * 4. Test accessibility with reduced motion and high contrast
+ * 5. Document any deviations from these patterns
+ *
+ */
+/* =================================================================== */
 /* PK (Partial Picking System) - Modern CSS Architecture              */
 /* Angular 20 + Standard CSS with NWFTH Brown Theme                  */
 /* Based on Mobile-Rust proven patterns and Angular best practices   */
@@ -66,10 +141,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Enhanced Focus Styles for Accessibility */
+/* =================================================================== */
+/* Enhanced Focus System - Global Accessibility Standards            */
+/* =================================================================== */
+
+/* Base focus style - consistent across all interactive elements */
 :focus-visible {
-  outline: 2px solid hsl(var(--color-brand-amber-hsl));
+  outline: 2px solid hsl(var(--color-accent));
   outline-offset: 2px;
+  transition: outline-color var(--animation-duration-fast) var(--animation-easing);
+}
+
+/* Focus system with semantic meanings */
+.focus-primary:focus-visible {
+  outline: 2px solid hsl(var(--color-primary));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px hsl(var(--color-primary) / 0.2);
+}
+
+.focus-accent:focus-visible {
+  outline: 2px solid hsl(var(--color-accent));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px hsl(var(--color-accent) / 0.2);
+}
+
+.focus-danger:focus-visible {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.focus-success:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
 }
 
 /* Form Elements Inheritance */

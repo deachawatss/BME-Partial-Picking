@@ -495,7 +495,7 @@
   cursor: not-allowed;
 }
 
-/* Loading Spinner */
+/* Loading Spinner - Uses global animations from animations.css */
 .loading-spinner {
   width: 12px;
   height: 12px;
@@ -505,10 +505,7 @@
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+/* @keyframes spin is defined globally in animations.css */
 
 /* Error Message */
 .error-message {

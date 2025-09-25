@@ -7,7 +7,7 @@
 .nwfth-input {
   display: flex;
   width: 100%;
-  border-radius: var(--radius);
+  border-radius: 0.75rem;
   border: 1px solid hsl(var(--color-border));
   background-color: hsl(var(--color-background));
   padding: 0.75rem 1rem;
@@ -27,22 +27,18 @@
   opacity: 1;
 }
 
-/* Focus States - Enhanced for accessibility */
+/* Focus States - Uses global focus system */
 .nwfth-input:focus,
 .nwfth-input:focus-visible {
   outline: none;
-  border-color: var(--color-brand-amber);
+  border-color: hsl(var(--color-accent));
   box-shadow: 0 0 0 2px hsl(var(--color-accent) / 0.2);
-  ring: 2px solid hsl(var(--color-accent));
-  ring-offset: 2px;
 }
 
-/* Enhanced focus for better accessibility */
-.nwfth-input:focus-visible {
-  border-color: var(--color-brand-amber);
-  box-shadow: 0 0 0 3px hsl(var(--color-accent) / 0.3);
-  outline: 2px solid hsl(var(--color-accent));
-  outline-offset: 2px;
+/* Focus variants for different states */
+.nwfth-input.focus-primary:focus-visible {
+  border-color: hsl(var(--color-primary));
+  box-shadow: 0 0 0 2px hsl(var(--color-primary) / 0.2);
 }
 
 /* Read-only State */
@@ -74,25 +70,25 @@
   min-height: 48px;
 }
 
-/* Input States */
+/* Input States - Using semantic colors */
 .nwfth-input-error {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  border-color: hsl(var(--color-danger));
+  box-shadow: 0 0 0 2px hsl(var(--color-danger) / 0.2);
 }
 
 .nwfth-input-error:focus {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+  border-color: hsl(var(--color-danger));
+  box-shadow: 0 0 0 2px hsl(var(--color-danger) / 0.3);
 }
 
 .nwfth-input-success {
-  border-color: #22c55e;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  border-color: hsl(var(--color-success));
+  box-shadow: 0 0 0 2px hsl(var(--color-success) / 0.2);
 }
 
 .nwfth-input-warning {
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+  border-color: hsl(var(--color-warning));
+  box-shadow: 0 0 0 2px hsl(var(--color-warning) / 0.2);
 }
 
 /* Textarea */
@@ -205,12 +201,12 @@
   margin-bottom: 0;
 }
 
-/* Error Messages */
+/* Error Messages - Using semantic colors */
 .nwfth-error-message {
   margin-top: 0.5rem;
   font-size: 0.75rem;
   line-height: 1rem;
-  color: #ef4444;
+  color: hsl(var(--color-danger));
 }
 
 /* Help Text */

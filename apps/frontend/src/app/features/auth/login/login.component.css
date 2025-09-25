@@ -1,16 +1,18 @@
 /* Login Component Specific Styles */
 
-/* Login-specific enhancements */
+/* Login-specific enhancements - Clean focus states */
 .login-form-container input:focus-visible,
 .login-form-container button:focus-visible {
-  outline: 2px solid hsl(var(--color-accent));
-  outline-offset: 2px;
+  outline: none;
 }
 
-/* Login form field enhancements */
+/* Login form field enhancements - Single clean amber focus effect */
+.login-form-container .nwfth-input:focus,
 .login-form-container .nwfth-input:focus-visible {
-  transform: scale(1.02);
-  box-shadow: 0 0 0 3px hsl(var(--color-accent) / 0.3);
+  border-color: hsl(var(--color-brand-amber-hsl));
+  box-shadow: 0 0 0 2px hsl(var(--color-brand-amber-hsl) / 0.3);
+  outline: none;
+  transform: none; /* Remove transform to avoid layout shift */
 }
 
 /* Login button enhancements */
@@ -23,15 +25,16 @@
   transform: translateY(0) scale(1);
 }
 
-/* Form validation styling */
+/* Input field styling - connection status removed from borders */
+/* Backend connection status now only affects the status indicator below the form */
+
+/* Form validation - use error messages instead of border colors */
 .nwfth-input.ng-invalid.ng-touched {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+  /* Form validation errors shown via text messages, not border colors */
 }
 
 .nwfth-input.ng-valid.ng-touched {
-  border-color: #059669;
-  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+  /* Valid state uses default styling, no special border colors */
 }
 
 /* Login card enhancements */
@@ -69,18 +72,9 @@
   color: #92400e;
 }
 
-/* Status indicator pulse animation for connecting */
+/* Status indicator pulse animation for connecting - uses global @keyframes pulse from animations.css */
 .nwfth-indicator-connecting {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
 }
 
 /* Error alert styling */
@@ -180,18 +174,9 @@
   outline: none;
 }
 
-/* Loading spinner enhancement */
+/* Loading spinner enhancement - uses global @keyframes spin from animations.css */
 .tw-animate-spin {
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 /* Screen reader improvements */

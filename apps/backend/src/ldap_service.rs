@@ -44,74 +44,50 @@ impl LdapService {
         })
     }
 
-    /// Authenticate user against LDAP
+    /// Authenticate user against LDAP using direct UPN binding
     pub async fn authenticate(&self, username: &str, password: &str) -> Result<LdapUser> {
-        // First, search for the user to get their DN
-        let user_dn = self.find_user_dn(username).await?;
+        // Try direct UPN binding with multiple domain formats
+        let upn_domains = vec!["NWFTH.com", "newlywedsfoods.co.th"];
 
-        // Then bind with the user's credentials
-        self.bind_user(&user_dn, password).await?;
+        for domain in &upn_domains {
+            let upn = format!("{}@{}", username, domain);
+            info!("🔐 Attempting LDAP authentication with UPN: {}", upn);
 
-        // If authentication succeeds, get user details
-        self.get_user_details(username).await
+            match self.try_upn_bind(&upn, password).await {
+                Ok(()) => {
+                    info!("✅ LDAP authentication successful for UPN: {}", upn);
+                    // Authentication succeeded, get user details
+                    return self.get_user_details(username).await;
+                }
+                Err(e) => {
+                    info!("❌ LDAP authentication failed for UPN {}: {}", upn, e);
+                    // Continue to next domain
+                    continue;
+                }
+            }
+        }
+
+        // If all UPN attempts failed, return error
+        Err(anyhow::anyhow!("LDAP authentication failed for all domain formats"))
     }
 
-    /// Find user DN by username
-    async fn find_user_dn(&self, username: &str) -> Result<String> {
+
+    /// Try UPN binding for authentication
+    async fn try_upn_bind(&self, upn: &str, password: &str) -> Result<()> {
         let server_url = self.server_url.clone();
-        let bind_dn = self.bind_dn.clone();
-        let bind_password = self.bind_password.clone();
-        let base_dn = self.base_dn.clone();
-        let username = username.to_string();
-
-        tokio::task::spawn_blocking(move || -> Result<String> {
-            let mut ldap = LdapConn::new(&server_url)?;
-
-            // If we have bind credentials, use them; otherwise use anonymous bind
-            if let (Some(bind_dn), Some(bind_password)) = (&bind_dn, &bind_password) {
-                ldap.simple_bind(bind_dn, bind_password)?;
-            } else {
-                ldap.simple_bind("", "")?; // Anonymous bind
-            }
-
-            // Search for the user
-            let search_filter = format!("(sAMAccountName={})", username);
-            let (rs, _res) = ldap.search(
-                &base_dn,
-                Scope::Subtree,
-                &search_filter,
-                vec!["distinguishedName"]
-            )?.success()?;
-
-            if rs.is_empty() {
-                return Err(anyhow::anyhow!("User '{}' not found in LDAP", username));
-            }
-
-            let entry = SearchEntry::construct(rs[0].clone());
-            let dn = entry.attrs.get("distinguishedName")
-                .and_then(|v| v.first())
-                .ok_or_else(|| anyhow::anyhow!("No DN found for user"))?;
-
-            Ok(dn.clone())
-        }).await?
-    }
-
-    /// Bind with user credentials to verify password
-    async fn bind_user(&self, user_dn: &str, password: &str) -> Result<()> {
-        let server_url = self.server_url.clone();
-        let user_dn = user_dn.to_string();
+        let upn = upn.to_string();
         let password = password.to_string();
 
         tokio::task::spawn_blocking(move || -> Result<()> {
             let mut ldap = LdapConn::new(&server_url)?;
 
-            ldap.simple_bind(&user_dn, &password)
-                .context("LDAP authentication failed")?;
+            ldap.simple_bind(&upn, &password)
+                .context("LDAP UPN authentication failed")?;
 
-            info!("✅ LDAP authentication successful for DN: {}", user_dn);
             Ok(())
         }).await?
     }
+
 
     /// Get detailed user information from LDAP
     pub async fn get_user_details(&self, username: &str) -> Result<LdapUser> {
@@ -124,24 +100,42 @@ impl LdapService {
         tokio::task::spawn_blocking(move || -> Result<LdapUser> {
             let mut ldap = LdapConn::new(&server_url)?;
 
-            // Use service account for search if available
-            if let (Some(bind_dn), Some(bind_password)) = (&bind_dn, &bind_password) {
+            // Try to use service account for search if available
+            let search_result = if let (Some(bind_dn), Some(bind_password)) = (&bind_dn, &bind_password) {
                 ldap.simple_bind(bind_dn, bind_password)?;
-            } else {
-                ldap.simple_bind("", "")?;
-            }
 
-            // Search for user details
-            let search_filter = format!("(sAMAccountName={})", username);
-            let (rs, _res) = ldap.search(
-                &base_dn,
-                Scope::Subtree,
-                &search_filter,
-                vec!["displayName", "mail", "department", "distinguishedName", "cn"]
-            )?.success()?;
+                // Search for user details
+                let search_filter = format!("(sAMAccountName={})", username);
+                ldap.search(
+                    &base_dn,
+                    Scope::Subtree,
+                    &search_filter,
+                    vec!["displayName", "mail", "department", "distinguishedName", "cn"]
+                )?.success()
+            } else {
+                // No service account - return basic user info
+                info!("No service account configured, returning basic user info for: {}", username);
+                return Ok(LdapUser {
+                    username: username.to_string(),
+                    display_name: username.to_string(),
+                    email: format!("{}@nwfth.com", username),
+                    department: "Unknown".to_string(),
+                    dn: format!("CN={},CN=Users,{}", username, base_dn),
+                });
+            };
+
+            let (rs, _res) = search_result?;
 
             if rs.is_empty() {
-                return Err(anyhow::anyhow!("User '{}' not found in LDAP", username));
+                // If search returns empty, return basic info
+                info!("User '{}' not found in LDAP search, returning basic info", username);
+                return Ok(LdapUser {
+                    username: username.to_string(),
+                    display_name: username.to_string(),
+                    email: format!("{}@nwfth.com", username),
+                    department: "Unknown".to_string(),
+                    dn: format!("CN={},CN=Users,{}", username, base_dn),
+                });
             }
 
             let entry = SearchEntry::construct(rs[0].clone());
@@ -168,7 +162,7 @@ impl LdapService {
             let dn = entry.attrs.get("distinguishedName")
                 .and_then(|v| v.first())
                 .map(|s| s.as_str())
-                .unwrap_or("")
+                .unwrap_or(&format!("CN={},CN=Users,{}", username, base_dn))
                 .to_string();
 
             Ok(LdapUser {

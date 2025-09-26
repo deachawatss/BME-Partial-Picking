@@ -1,1 +1,68 @@
 node_modules
+
+# Runtime & build outputs
+dist/
+target/
+bin/
+coverage/
+
+# Framework caches - Angular
+apps/frontend/.angular/
+.angular/
+apps/frontend/.sass-cache/
+apps/frontend/tmp/
+
+# Rust build artifacts
+**/target/
+Cargo.lock
+**/*.rs.bk
+
+# Session and cache files
+**/.cache/
+**/cache/
+**/*cache*
+**/.tmp/
+**/tmp/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs & temp artifacts
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment files
+.env
+.env.*
+
+# Temporary files
+*.tmp
+*.temp
+proxy.conf.json
+
+# Build artifacts and compiled outputs
+*.tsbuildinfo
+*.buildlog

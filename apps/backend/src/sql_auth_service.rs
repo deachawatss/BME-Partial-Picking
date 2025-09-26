@@ -54,8 +54,7 @@ impl SqlAuthService {
             .context("DATABASE_PASSWORD or DB_PASSWORD must be set")?;
 
         let connection_string = format!(
-            "server={},{};database={};user id={};password={};TrustServerCertificate=true;",
-            server, port, database, username, password
+            "server={server},{port};database={database};user id={username};password={password};TrustServerCertificate=true;"
         );
 
         info!("🗄️ SQL Auth Service initialized for database: {}", database);
@@ -90,7 +89,7 @@ impl SqlAuthService {
         let rows = stream.into_first_result().await?;
 
         if rows.is_empty() {
-            return Err(anyhow::anyhow!("User '{}' not found or not configured for local authentication", username));
+            return Err(anyhow::anyhow!("User '{username}' not found or not configured for local authentication"));
         }
 
         let row = &rows[0];
@@ -102,11 +101,11 @@ impl SqlAuthService {
             Some(stored_pwd) => {
                 // Simple password comparison (in production, use bcrypt)
                 if stored_pwd != password {
-                    return Err(anyhow::anyhow!("Invalid password for user '{}'", username));
+                    return Err(anyhow::anyhow!("Invalid password for user '{username}'"));
                 }
             }
             None => {
-                return Err(anyhow::anyhow!("No password set for user '{}'", username));
+                return Err(anyhow::anyhow!("No password set for user '{username}'"));
             }
         }
 

@@ -102,7 +102,7 @@ impl JwtService {
 
         // Create display name from first and last name
         let display_name = match (&user.first_name, &user.last_name) {
-            (Some(first), Some(last)) if !last.is_empty() => format!("{} {}", first, last),
+            (Some(first), Some(last)) if !last.is_empty() => format!("{first} {last}"),
             (Some(first), _) => first.clone(),
             _ => user.username.clone(),
         };
@@ -167,7 +167,7 @@ impl JwtService {
     pub fn sql_user_to_user(&self, sql_user: &SqlUser, workstation_id: Option<String>) -> User {
         // Create display name from first and last name
         let display_name = match (&sql_user.first_name, &sql_user.last_name) {
-            (Some(first), Some(last)) if !last.is_empty() => format!("{} {}", first, last),
+            (Some(first), Some(last)) if !last.is_empty() => format!("{first} {last}"),
             (Some(first), _) => first.clone(),
             _ => sql_user.username.clone(),
         };

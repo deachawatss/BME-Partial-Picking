@@ -362,8 +362,7 @@ pub async fn refresh_token_handler(
         Err(error) => {
             warn!("Refresh token verification failed: {}", error);
             return Ok(Json(JwtService::create_error_response(&format!(
-                "Invalid token: {}",
-                error
+                "Invalid token: {error}"
             ))));
         }
     };

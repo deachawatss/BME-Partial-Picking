@@ -50,7 +50,7 @@ impl LdapService {
         let upn_domains = vec!["NWFTH.com", "newlywedsfoods.co.th"];
 
         for domain in &upn_domains {
-            let upn = format!("{}@{}", username, domain);
+            let upn = format!("{username}@{domain}");
             info!("🔐 Attempting LDAP authentication with UPN: {}", upn);
 
             match self.try_upn_bind(&upn, password).await {
@@ -105,7 +105,7 @@ impl LdapService {
                 ldap.simple_bind(bind_dn, bind_password)?;
 
                 // Search for user details
-                let search_filter = format!("(sAMAccountName={})", username);
+                let search_filter = format!("(sAMAccountName={username})");
                 ldap.search(
                     &base_dn,
                     Scope::Subtree,
@@ -118,9 +118,9 @@ impl LdapService {
                 return Ok(LdapUser {
                     username: username.to_string(),
                     display_name: username.to_string(),
-                    email: format!("{}@nwfth.com", username),
+                    email: format!("{username}@nwfth.com"),
                     department: "Unknown".to_string(),
-                    dn: format!("CN={},CN=Users,{}", username, base_dn),
+                    dn: format!("CN={username},CN=Users,{base_dn}"),
                 });
             };
 
@@ -132,9 +132,9 @@ impl LdapService {
                 return Ok(LdapUser {
                     username: username.to_string(),
                     display_name: username.to_string(),
-                    email: format!("{}@nwfth.com", username),
+                    email: format!("{username}@nwfth.com"),
                     department: "Unknown".to_string(),
-                    dn: format!("CN={},CN=Users,{}", username, base_dn),
+                    dn: format!("CN={username},CN=Users,{base_dn}"),
                 });
             }
 
@@ -149,9 +149,8 @@ impl LdapService {
                 .to_string();
 
             let email = entry.attrs.get("mail")
-                .and_then(|v| v.first())
-                .map(|s| s.clone())
-                .unwrap_or_else(|| format!("{}@nwfth.com", username));
+                .and_then(|v| v.first()).cloned()
+                .unwrap_or_else(|| format!("{username}@nwfth.com"));
 
             let department = entry.attrs.get("department")
                 .and_then(|v| v.first())
@@ -162,7 +161,7 @@ impl LdapService {
             let dn = entry.attrs.get("distinguishedName")
                 .and_then(|v| v.first())
                 .map(|s| s.as_str())
-                .unwrap_or(&format!("CN={},CN=Users,{}", username, base_dn))
+                .unwrap_or(&format!("CN={username},CN=Users,{base_dn}"))
                 .to_string();
 
             Ok(LdapUser {

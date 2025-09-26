@@ -1,232 +1,250 @@
-<div class="partial-picking-wrapper">
-  <div class="partial-picking-surface">
+<div class="partial-picking-screen">
+  <div class="partial-picking-shell" [formGroup]="partialPickingForm">
 
-    <section class="header-card" [formGroup]="partialPickingForm">
-      <div class="header-row">
-        <div class="header-field-block">
-          <span class="header-label">Run No</span>
-          <div class="input-shell">
-            <input type="text" class="primary-input" formControlName="runNo" />
-            <button type="button" class="icon-button" (click)="onLookup('runNo')" aria-label="Lookup run number">
-              🔍
-            </button>
-          </div>
-        </div>
-        <div class="fg-summary">
-          <div class="fg-title-row">
-            <span class="fg-label">FG Item Key</span>
-            <span class="fg-key">{{ partialPickingData().fgItemKey }}</span>
-          </div>
-          <div class="fg-description">{{ partialPickingData().fgDescription }}</div>
-        </div>
-      </div>
+    <!-- Large Progress Bar -->
+    <app-weight-progress-bar
+      [currentWeight]="currentWeight()"
+      [config]="progressConfig()"
+      [isConnected]="isScaleConnected()"
+      [isStable]="isWeightStable()"
+      (tareScale)="onTareScale()"
+      (reconnectScale)="onReconnectScale()">
+    </app-weight-progress-bar>
 
-      <div class="header-row secondary">
-        <div class="header-field-block">
-          <span class="header-label">Batch No</span>
-          <div class="input-shell">
-            <input type="text" class="primary-input" formControlName="batchNo" />
-            <button type="button" class="icon-button" (click)="onLookup('batchNo')" aria-label="Lookup batch number">
-              🔍
-            </button>
-          </div>
-        </div>
-        <div class="batch-meta">
-          <div class="meta-chip">
-            <span class="chip-label">Batches</span>
-            <span class="chip-value">{{ partialPickingData().batches }}</span>
-          </div>
-          <div class="meta-chip">
-            <span class="chip-label">@</span>
-            <span class="chip-value">1.0000</span>
-          </div>
-          <div class="meta-chip">
-            <span class="chip-label">Production Date</span>
-            <span class="chip-value">{{ partialPickingData().productionDate }}</span>
-          </div>
-        </div>
-      </div>
+    <section class="section-frame">
+      <table class="header-table">
+        <colgroup>
+          <col class="col-label" />
+          <col class="col-field" />
+          <col class="col-label" />
+          <col />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row">Run No</th>
+            <td>
+              <div class="input-wrap">
+                <input type="text" formControlName="runNo" />
+                <button type="button" class="lookup-btn" (click)="onLookup('runNo')" aria-label="Lookup run number">🔍</button>
+              </div>
+            </td>
+            <th scope="row">FG Item Key</th>
+            <td class="fg-cell">
+              <div class="fg-key">{{ partialPickingData().fgItemKey }}</div>
+              <div class="fg-desc">{{ partialPickingData().fgDescription }}</div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Batch No</th>
+            <td>
+              <div class="input-wrap">
+                <input type="text" formControlName="batchNo" />
+                <button type="button" class="lookup-btn" (click)="onLookup('batchNo')" aria-label="Lookup batch number">🔍</button>
+              </div>
+            </td>
+            <th scope="row">Batches</th>
+            <td>
+              <div class="meta-inline">
+                <span class="meta-box">{{ partialPickingData().batches }}</span>
+                <span class="meta-separator">@</span>
+                <span class="meta-box">1.0000</span>
+                <span class="meta-label">Production Date</span>
+                <span class="meta-box">{{ partialPickingData().productionDate }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
-    <section class="content-grid" [formGroup]="partialPickingForm">
-      <div class="form-panel">
-        <div class="form-row">
-          <span class="row-label">Item Key</span>
-          <div class="row-body">
-            <div class="input-shell grow">
-              <input type="text" class="primary-input" formControlName="itemKey" />
-              <button type="button" class="icon-button" (click)="onLookup('itemKey')" aria-label="Lookup item key">
-                🔍
-              </button>
-            </div>
-            <input type="text" class="primary-input uom" formControlName="unitOfMeasure" readonly />
-          </div>
-        </div>
+    <div class="body-section">
+      <section class="form-panel">
+        <table class="form-table">
+          <colgroup>
+            <col class="col-label" />
+            <col class="col-field" />
+            <col class="col-util" />
+            <col class="col-field" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">Item Key</th>
+              <td colspan="2">
+                <div class="input-wrap">
+                  <input type="text" formControlName="itemKey" />
+                </div>
+              </td>
+              <td>
+                <button type="button" class="lookup-btn" (click)="onLookup('itemKey')" aria-label="Lookup item key">🔍</button>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Description</th>
+              <td colspan="3">
+                <div class="input-wrap">
+                  <input type="text" formControlName="description" />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Lot No.</th>
+              <td>
+                <div class="input-wrap">
+                  <input type="text" formControlName="lotNo" />
+                </div>
+              </td>
+              <td>
+                <button type="button" class="lookup-btn" (click)="onLookup('lotNo')" aria-label="Lookup lot number">🔍</button>
+              </td>
+              <td>
+                <div class="input-wrap inline-tag">
+                  <input type="text" value="SOH" readonly />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Bin No.</th>
+              <td>
+                <div class="input-wrap">
+                  <input type="text" formControlName="binNo" />
+                </div>
+              </td>
+              <td>
+                <button type="button" class="lookup-btn" (click)="onLookup('binNo')" aria-label="Lookup bin number">🔍</button>
+              </td>
+              <td>
+                <div class="input-wrap inline-tag">
+                  <input type="text" [value]="partialPickingData().binSOHDisplay" readonly />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Bag Weight</th>
+              <td colspan="2">
+                <div class="input-wrap">
+                  <input type="number" [value]="formatNumber(partialPickingData().bagWeight)" readonly />
+                </div>
+              </td>
+              <td>
+                <div class="meta-inline">
+                  <button type="button" class="square-btn" (click)="onCalculateBagWeight()" aria-label="Calculate bag weight">🧮</button>
+                  <button type="button" class="square-btn" (click)="onLookup('bagWeight')" aria-label="Bag weight presets">🗂</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Weight</th>
+              <td colspan="2">
+                <div class="input-wrap" [class.weight-in-range]="isFormWeightInRange()" [class.weight-out-of-range]="!isFormWeightInRange() && partialPickingData().weight > 0">
+                  <input type="number" formControlName="weight" inputmode="decimal" [value]="getCurrentWeightDisplay()" readonly />
+                </div>
+              </td>
+              <td>
+                <button type="button" class="fetch-btn" (click)="onFetchWeight()" [disabled]="isLoading()">
+                  @if (isLoading()) {
+                    <span class="spinner"></span>
+                    <span>Fetching</span>
+                  } @else {
+                    Fetch Weight
+                  }
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Weight Range</th>
+              <td colspan="3">
+                <div class="range-row">
+                  <div class="input-wrap">
+                    <input type="number" [value]="formatNumber(partialPickingData().weightRangeMin)" readonly />
+                  </div>
+                  <span>to</span>
+                  <div class="input-wrap">
+                    <input type="number" [value]="formatNumber(partialPickingData().weightRangeMax)" readonly />
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Total Needed</th>
+              <td colspan="3">
+                <div class="input-wrap">
+                  <input type="number" [value]="formatNumber(partialPickingData().totalNeeded)" readonly />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Remaining Qty</th>
+              <td colspan="3">
+                <div class="range-row">
+                  <div class="input-wrap">
+                    <input type="number" [value]="formatNumber(partialPickingData().remainingQty)" readonly />
+                  </div>
+                  <span class="help-note">*Intermediate</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-        <div class="form-row">
-          <span class="row-label">Description</span>
-          <div class="row-body">
-            <input type="text" class="primary-input stretch" formControlName="description" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <span class="row-label">Lot No.</span>
-          <div class="row-body">
-            <div class="input-shell grow">
-              <input type="text" class="primary-input" formControlName="lotNo" />
-              <button type="button" class="icon-button" (click)="onLookup('lotNo')" aria-label="Lookup lot number">
-                🔍
-              </button>
-            </div>
-            <span class="badge-soh">SOH</span>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <span class="row-label">Bin No.</span>
-          <div class="row-body">
-            <div class="input-shell grow">
-              <input type="text" class="primary-input" formControlName="binNo" />
-              <button type="button" class="icon-button" (click)="onLookup('binNo')" aria-label="Lookup bin number">
-                🔍
-              </button>
-            </div>
-            <span class="bin-soh">{{ partialPickingData().binSOHDisplay }}</span>
-          </div>
-        </div>
-
-        <div class="form-row compact">
-          <span class="row-label">Bag Weight</span>
-          <div class="row-body row-actions">
-            <input type="number" class="primary-input small" formControlName="bagWeight"
-                   [value]="formatNumber(partialPickingData().bagWeight)" readonly />
-            <button type="button" class="icon-button square" (click)="onCalculateBagWeight()" aria-label="Calculate bag weight">🧮</button>
-            <button type="button" class="icon-button square" (click)="onLookup('bagWeight')" aria-label="Bag weight presets">🗂</button>
-          </div>
-        </div>
-
-        <div class="form-row weight-row">
-          <span class="row-label">Weight</span>
-          <div class="row-body weight-stack">
-            <div class="weight-entry">
-              <input type="number" class="primary-input"
-                     formControlName="weight"
-                     [class.weight-in-range]="isWeightInRange()"
-                     [class.weight-out-of-range]="!isWeightInRange() && partialPickingData().weight > 0"
-                     [value]="formatNumber(partialPickingData().weight)" />
-              <button type="button" class="fetch-button" (click)="onFetchWeight()" [disabled]="isLoading()">
-                @if (isLoading()) {
-                  <span class="spinner"></span>
-                  <span>Fetching…</span>
-                } @else {
-                  Fetch Weight
-                }
-              </button>
-            </div>
-
-            <div class="weight-meter">
-              <div class="meter-track">
-                <div class="meter-fill" [class.out-of-range]="!isWeightInRange() && partialPickingData().weight > 0"
-                     [style.width.%]="partialPickingData().weight > 0 ? 70 : 0"></div>
-              </div>
-              <div class="meter-labels">
-                <span>{{ formatNumber(partialPickingData().weightRangeMin) }} kg</span>
-                <span>Target Range</span>
-                <span>{{ formatNumber(partialPickingData().weightRangeMax) }} kg</span>
-              </div>
-              <div class="meter-status"
-                   [class.in-range]="isWeightInRange()"
-                   [class.out-of-range]="!isWeightInRange() && partialPickingData().weight > 0">
-                @if (partialPickingData().weight === 0) {
-                  Awaiting measurement
-                } @else if (isWeightInRange()) {
-                  Weight within tolerance
-                } @else {
-                  Weight outside tolerance
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <span class="row-label">Weight Range</span>
-          <div class="row-body">
-            <input type="number" class="primary-input half" formControlName="weightRangeMin"
-                   [value]="formatNumber(partialPickingData().weightRangeMin)" readonly />
-            <input type="number" class="primary-input half" formControlName="weightRangeMax"
-                   [value]="formatNumber(partialPickingData().weightRangeMax)" readonly />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <span class="row-label">Total Needed</span>
-          <div class="row-body">
-            <input type="number" class="primary-input" formControlName="totalNeeded"
-                   [value]="formatNumber(partialPickingData().totalNeeded)" readonly />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <span class="row-label">Remaining Qty</span>
-          <div class="row-body">
-            <input type="number" class="primary-input" formControlName="remainingQty"
-                   [value]="formatNumber(partialPickingData().remainingQty)" readonly />
-            <span class="note-label">*Intermediate</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-panel">
-        <div class="table-header">
-          <div>
-            <h3>Batch Ticket Partials</h3>
-            <p class="table-subtitle">Pending to Picked workflow</p>
-          </div>
-          <div class="tab-group">
-            <button type="button" class="tab active">Pending to Picked</button>
-            <button type="button" class="tab">Picked</button>
+      <section class="table-panel">
+        <div class="table-panel-header">
+          <div class="table-title">Batch Ticket Partials</div>
+          <div class="tab-strip">
+            <button type="button" class="tab-btn active">Pending to Picked</button>
+            <button type="button" class="tab-btn">Picked</button>
           </div>
         </div>
         <div class="table-scroll">
-          <div class="table-row table-head">
-            <span>Item</span>
-            <span>Batch No</span>
-            <span>Partial</span>
-            <span>Weighted</span>
-            <span>Balance</span>
-            <span>Allergens</span>
-          </div>
-          @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
-            <button type="button" class="table-row table-body"
-                    (click)="onSelectBatchRow(i)"
-                    [class.selected]="item.item === 'INFULM01'">
-              <span>{{ item.item }}</span>
-              <span>{{ item.batchNo }}</span>
-              <span class="numeric">{{ formatNumber(item.partial) }}</span>
-              <span class="numeric">{{ formatNumber(item.weighted) }}</span>
-              <span class="numeric">{{ formatNumber(item.balance) }}</span>
-              <span>{{ item.allergens ?? 'None' }}</span>
-            </button>
-          }
+          <table class="batch-table">
+            <colgroup>
+              <col />
+              <col />
+              <col />
+              <col />
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Batch No</th>
+                <th>Partial</th>
+                <th>Weighted</th>
+                <th>Balance</th>
+                <th>Allergens</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
+                <tr (click)="onSelectBatchRow(i)" [class.selected]="item.item === 'INFULM01'">
+                  <td>{{ item.item }}</td>
+                  <td>{{ item.batchNo }}</td>
+                  <td class="numeric">{{ formatNumber(item.partial) }}</td>
+                  <td class="numeric">{{ formatNumber(item.weighted) }}</td>
+                  <td class="numeric">{{ formatNumber(item.balance) }}</td>
+                  <td>{{ item.allergens ?? 'None' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <section class="actions-bar">
-      <div class="action-meta">
-        <span class="operator-label">Operator</span>
+    <footer class="footer-actions">
+      <div class="operator-info">
+        Operator
         <span class="operator-name">{{ getCurrentUser() }}</span>
       </div>
       <div class="action-buttons">
-        <button type="button" class="action-button" (click)="onAddLot()">Add Lot</button>
-        <button type="button" class="action-button" (click)="onViewLots()">View Lots</button>
-        <button type="button" class="action-button" (click)="onPrint()">Print</button>
-        <button type="button" class="action-button primary" (click)="onSave()">Save</button>
-        <button type="button" class="action-button danger" (click)="onExit()">Exit</button>
+        <button type="button" class="action-btn secondary" (click)="onAddLot()">Add Lot</button>
+        <button type="button" class="action-btn secondary" (click)="onViewLots()">View Lots</button>
+        <button type="button" class="action-btn secondary" (click)="onPrint()">Print</button>
+        <button type="button" class="action-btn" (click)="onSave()">Save</button>
+        <button type="button" class="action-btn danger" (click)="onExit()">Exit</button>
       </div>
-    </section>
+    </footer>
 
   </div>
 </div>

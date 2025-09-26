@@ -1,25 +1,9 @@
 // PK Bridge Service - C# .NET Minimal API
 // Placeholder implementation for ScaleLibrary.dll integration
 
-using Microsoft.AspNetCore.Cors;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
-
-// Enable CORS
-app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
@@ -71,9 +55,15 @@ app.MapGet("/scales", () => new[]
     }
 });
 
-Console.WriteLine("🔷 PK Bridge Service starting...");
-Console.WriteLine("📡 Scale API: http://localhost:5000");
-Console.WriteLine("❤️  Health check: http://localhost:5000/health");
-Console.WriteLine("⚖️  Weight endpoint: http://localhost:5000/weight");
+// Get server configuration from environment - NO hardcoding
+var serverHost = Environment.GetEnvironmentVariable("SERVER_HOST") ?? "0.0.0.0";
+var bridgePort = Environment.GetEnvironmentVariable("BRIDGE_SERVICE_PORT") ?? "5000";
+var bindUrl = $"http://{serverHost}:{bridgePort}";
+var displayUrl = $"http://{serverHost}:{bridgePort}";
 
-app.Run("http://0.0.0.0:5000");
+Console.WriteLine("🔷 PK Bridge Service starting...");
+Console.WriteLine($"📡 Scale API: {displayUrl}");
+Console.WriteLine($"❤️  Health check: {displayUrl}/health");
+Console.WriteLine($"⚖️  Weight endpoint: {displayUrl}/weight");
+
+app.Run(bindUrl);

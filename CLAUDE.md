@@ -26,16 +26,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-### Development Commands
-```bash
-# Start all services in development mode (PRIMARY COMMAND)
-npm run dev:all         # Kills existing processes, then starts all services
+### 🚀 Development Commands
 
-# Process management
+⚠️ **IMPORTANT: Always Use `npm run dev:all` for Development**
+
+The `dev:all` script **automatically handles process cleanup** and prevents port conflicts:
+
+```bash
+# 🚀 PRIMARY COMMAND - Use this for ALL development work
+npm run dev:all         # Automatically cleans processes, then starts all services
+
+# 🔧 Process Management (handled automatically by dev:all)
 npm run dev:clean       # Kill all development processes and free ports
 npm run dev:stop        # Same as dev:clean (alias)
 
-# Start individual services
+# ⚠️  Individual services (use ONLY after manual dev:clean)
 npm run dev:frontend    # Angular dev server on :6060
 npm run dev:backend     # Rust server on :7070
 npm run dev:bridge      # C# bridge service on :5000
@@ -52,6 +57,33 @@ npm run test:frontend   # Jest + Angular testing library
 npm run test:backend    # Rust built-in tests
 npm run test:e2e        # Playwright E2E tests
 ```
+
+### 🔧 **How `npm run dev:all` Prevents Port Conflicts**
+
+**The Problem**: Running `cargo run` or `ng serve` directly can cause:
+- 🚫 Multiple processes competing for the same ports (7070, 6060, 5000)
+- 🚫 "Address already in use" errors
+- 🚫 Orphaned background processes
+- 🚫 Frontend connection failures (`ERR_CONNECTION_RESET`)
+
+**The Solution**: `npm run dev:all` implements this workflow automatically:
+
+1. **🧹 Auto-Cleanup**: Runs `npm run dev:clean` to kill existing processes:
+   - Terminates `ng serve`, `webpack`, `cargo run`, `dotnet run`
+   - Force-kills ports 6060, 7070, 5000-5005 using `fuser -k`
+   - Verifies cleanup success with process counting
+
+2. **⚡ Service Orchestration**: Starts all 3 services in parallel:
+   - Professional process management with signal handling
+   - Tears down remaining services on any failure
+   - Prevents orphaned processes
+
+3. **🎯 Clean Shutdown**: Handles Ctrl+C gracefully to terminate all processes
+
+**Why This Matters**:
+- ✅ **Zero Port Conflicts**: Automatic cleanup prevents "Address already in use"
+- ✅ **Reliable Startup**: All services start fresh without interference
+- ✅ **Professional Workflow**: Signal handling and graceful shutdown
 
 ### Individual Service Commands
 ```bash
@@ -143,17 +175,20 @@ PK/
 - **Standalone Components**: No NgModules complexity
 - **Responsive Design**: Warehouse tablet optimization with mobile fallback
 
-### Port Configuration
-- Frontend: ✅ http://localhost:6060 (fully functional)
-- Backend: 🚧 http://localhost:7070 (Rust Axum - planned)
-- Bridge Service: 🚧 http://localhost:5000 (C# - planned)
+### Port Configuration (Configurable via .env)
+- Frontend: ✅ Configured via `FRONTEND_PORT` (default: 6060)
+- Backend: 🚧 Configured via `BACKEND_PORT` (default: 7070)
+- Bridge Service: 🚧 Configured via `BRIDGE_SERVICE_PORT` (default: 5000)
+
+**Note**: All ports and URLs are dynamically configured from root `.env` file
 
 ## Database Integration
 
-### Primary Database Architecture
-- **TFCPILOT3**: Primary database for all read-write operations
-- **TFCLIVE**: Fallback/scale configuration source if needed
+### Primary Database Architecture (Configured via .env)
+- **Primary DB**: Configured via `DATABASE_SERVER` and `DATABASE_NAME`
+- **Scale DB**: Configured via `SCALE_DB_SERVER` and `SCALE_DB_NAME`
 - **Connection**: Tiberius SQL Server driver from Rust backend
+- **Credentials**: Set via `DATABASE_USERNAME` and `DATABASE_PASSWORD`
 
 ### Key Database Tables
 - `Cust_PartialRun`: Main partial picking runs
@@ -201,14 +236,16 @@ mcp__sqlserver__read_query("SELECT TOP 5 * FROM Cust_PartialRun WHERE Status = '
 ## Development Guidelines
 
 ### Critical Rules - READ FIRST
-- **Documentation Consistency**: ALWAYS read `docs/architecture.md` before starting any development work
-- **Documentation Updates**: If code changes contradict documentation, update docs immediately to match implementation
-- **Single Command Development**: Always use `npm run dev:all` - never run separate cargo/npm commands
+- **🚨 NO HARDCODING**: Never hardcode IPs, ports, URLs, or configuration values
+- **Environment First**: ALL configuration must use root `.env` file and environment variables
+- **Configuration Scripts**: Always run `npm run env:config` and `npm run csp:update` before development
+- **Documentation Consistency**: ALWAYS read `docs/environment-configuration.md` and `docs/architecture.md`
+- **Single Command Development**: Always use `npm run dev:all` - configuration auto-updates included
 - **Quality Gates**: ALWAYS run lint, clippy (Rust), and fix ALL warnings - never ignore, suppress, or hide warnings
 - **Dead Code Policy**: Remove ALL dead code immediately - no unused functions, variables, or imports allowed
 - **Warning Policy**: Fix ALL compilation warnings immediately - never ignore or suppress
 - **Database Schema Verification**: Always use sqlserver MCP to verify field names and types
-- **Real-time Testing**: Test weight scale integration with actual hardware when possible
+- **Environment Variables**: Check `.env` file first, use `mcp__sqlserver__` tools for database verification
 
 ### Code Standards
 - **Frontend**: Follow Angular 20 + TypeScript best practices with NWFTH brown theme
@@ -222,34 +259,95 @@ mcp__sqlserver__read_query("SELECT TOP 5 * FROM Cust_PartialRun WHERE Status = '
 - **E2E Tests**: Playwright for complete user workflows
 - **Hardware Tests**: Manual validation with actual USB weight scales
 
-## Environment Configuration
+## 🔧 Environment Configuration System
 
-### Required Environment Variables
+**CRITICAL**: All configuration is centralized in the root `.env` file. No more hardcoded IPs or ports!
+
+### Configuration Architecture
+- **Root `.env`**: Single source of truth for all system settings
+- **Auto-Generation**: Environment files automatically generated from `.env`
+- **Dynamic CSP**: Content Security Policy updates automatically
+- **Cross-Platform**: Works across Angular, Rust, and C# services
+
+### Key Environment Variables (see root .env for complete list)
 ```bash
-# Database Configuration
-PRIMARY_DB=TFCPILOT3
-SCALE_DB=TFCPILOT3
-DB_SERVER=192.168.0.86
-DB_PORT=49381
-
-# Service Ports
+# 🌍 Service Configuration
 FRONTEND_PORT=6060
 BACKEND_PORT=7070
 BRIDGE_SERVICE_PORT=5000
+SERVER_HOST=0.0.0.0
 
-# Authentication
-LDAP_SERVER=ldap://192.168.0.1
-JWT_SECRET=your_jwt_secret
+# 🗄️ Database Configuration
+DATABASE_SERVER=192.168.0.86
+DATABASE_NAME=TFCPILOT3
+DATABASE_USERNAME=NSW
+DATABASE_PASSWORD=B3sp0k3
 
-# Hardware Configuration
+# 🔐 Authentication
+LDAP_URL=ldap://192.168.0.1
+LDAP_BASE_DN=DC=NWFTH,DC=com
+JWT_SECRET=your_secure_jwt_secret
+
+# ⚖️ Hardware Configuration
 DEFAULT_SCALE_BAUD_RATE=9600
 WEIGHT_POLLING_INTERVAL_MS=400
 WEBSOCKET_MAX_RESPONSE_TIME=100
 ```
 
+### ⚡ Automatic Configuration System
+All services automatically read from the root `.env` file:
+- **Frontend**: Environment files auto-generated on `npm start`
+- **Backend**: Rust services use environment variables directly
+- **Bridge Service**: C# reads via `Environment.GetEnvironmentVariable()`
+- **CSP Headers**: Dynamically updated with configured URLs
+
+### 🚀 Usage
+```bash
+# 1. Edit root .env file with your settings
+nano .env
+
+# 2. Start services - configuration applies automatically
+npm run dev:all
+
+# Everything is configured dynamically!
+```
+
 ### Development vs Production
-- **Development**: Use npm run dev:all for unified development server
-- **Production**: Separate builds required - frontend (ng build), backend (cargo build --release), bridge service (dotnet publish)
+- **Development**: `npm run dev:all` - auto-configures from `.env`
+- **Production**: `npm run build:prod` - production environment auto-generated
+
+### 📚 Complete Configuration Documentation
+See `/docs/environment-configuration.md` for comprehensive configuration guide including:
+- Configuration mapping from hardcoded to environment variables
+- Service-specific configuration details
+- Troubleshooting and best practices
+- Advanced configuration scenarios
+
+## 🧪 Testing & Authentication
+
+### Test Credentials for Development
+**Primary Test Account**:
+- **Username**: `deachawat`
+- **Password**: `Wind@password9937`
+
+### Testing Usage
+```bash
+# Playwright E2E Testing
+npm run test:e2e           # Full E2E test suite with test credentials
+npm run test:e2e:headed    # Run with browser visible for debugging
+npm run test:e2e:debug     # Debug mode with step-through
+
+# Manual Testing
+# Use deachawat / Wind@password9937 for:
+# - LDAP/AD authentication testing
+# - Manual login form validation
+# - Browser-based testing scenarios
+```
+
+### Authentication Configuration
+- **LDAP Settings**: Configured via `LDAP_URL` and `LDAP_BASE_DN` in `.env`
+- **Database Auth**: Uses `DATABASE_USERNAME` and `DATABASE_PASSWORD` from `.env`
+- **JWT Configuration**: Managed via `JWT_SECRET` and `JWT_DURATION_HOURS`
 
 ## Key Business Logic (Current Implementation)
 
@@ -296,178 +394,27 @@ This project follows proven patterns from the existing Mobile-Rust bulk picking 
 
 Note: Mobile-Rust is a reference implementation - PK system is completely independent with no code dependencies.
 
+## 🔧 Environment Configuration Resources
 
-# Claude-Codex Orchestrator/Worker Architecture (2025-09-01)
-## Paradigm: Claude as Orchestrator, Codex as Workers
-### Division of Responsibilities
-#### Claude (Orchestrator - Opus/Sonnet)
-**Primary Role**: High-level thinking, planning, and GitHub operations
-- 🧠 **Thinking & Analysis**: Strategic planning, decision making, result interpretation
-- 📋 **GitHub Operations**: All `gh` CLI operations (issues, PRs, comments, merges)
-- 🎛️ **Worker Management**: Spawn, monitor, and coordinate multiple Codex instances
-- 📊 **Progress Monitoring**: Track worker status using `BashOutput`
-- 🔄 **Result Aggregation**: Combine outputs from multiple workers
-- 📝 **Documentation**: Write retrospectives, update AGENTS.md
-- 🔍 **Quality Control**: Review worker outputs before GitHub operations
-#### Codex (Workers)
-**Primary Role**: Execution, implementation, and file operations
-- ⚙️ **Code Execution**: Run commands, analyze code, implement features
-- 📁 **File Operations**: Read, write, edit, search through codebases
-- 🔧 **Implementation**: Make code changes, refactor, fix bugs
-- 🚀 **Parallel Processing**: Multiple instances for concurrent tasks
-- 📈 **Analysis Tasks**: Deep code analysis, pattern detection
-- 🧪 **Testing**: Run tests, validate changes
-### Implementation Patterns
-#### Single Worker Pattern
+### Complete Configuration Guide
+See `/docs/environment-configuration.md` for comprehensive documentation on:
+- Environment variable setup and usage
+- Configuration script operation (env-config.js, update-csp.js)
+- Service configuration patterns (Angular, Rust, C#)
+- Development vs production environment management
+- Troubleshooting and best practices
+
+### Configuration Verification
 ```bash
-# Claude delegates a single task to Codex
-codex exec -s danger-full-access -c model_reasoning_effort="low" "Task description"
+# Verify configuration is working
+npm run dev:clean          # Clean previous processes
+npm run dev:all            # Start all services with current .env
+# Check console for loaded configuration values
 ```
-#### Multiple Worker Pattern
-```bash
-# Claude spawns multiple Codex workers for parallel execution
-# Worker 1: Frontend analysis
-codex exec -s danger-full-access "Analyze all React components" &  # Returns bash_1
-# Worker 2: Backend analysis  
-codex exec -s danger-full-access "Review API endpoints" &  # Returns bash_2
-# Worker 3: Test coverage
-codex exec -s danger-full-access "Check test coverage" &  # Returns bash_3
-# Claude monitors all workers
-BashOutput bash_1  # Monitor frontend analysis
-BashOutput bash_2  # Monitor backend analysis
-BashOutput bash_3  # Monitor test coverage
-# Claude aggregates results and creates GitHub issue/PR
-```
-#### Background Worker Pattern
-```bash
-# For long-running tasks, use background execution
-codex exec -s danger-full-access -c model_reasoning_effort="high" \
-  "Complex refactoring task" \
-  run_in_background: true  # Returns bash_id
-# Claude continues other work while monitoring
-BashOutput bash_id  # Check progress periodically
-```
-### Workflow Examples
-#### Example 1: Multi-File Refactoring
-```
-1. Claude analyzes requirements
-2. Claude spawns 3 Codex workers:
-   - Worker A: Refactor components
-   - Worker B: Update tests
-   - Worker C: Update documentation
-3. Claude monitors all three in parallel
-4. Claude aggregates changes
-5. Claude creates PR with gh CLI
-```
-#### Example 2: Codebase Analysis
-```
-1. Claude plans analysis strategy
-2. Claude delegates to Codex:
-   - "Analyze security vulnerabilities"
-   - "Check code quality metrics"
-   - "Review dependency updates"
-3. Codex executes and returns findings
-4. Claude creates comprehensive GitHub issue
-```
-#### Example 3: Bug Fix Workflow
-```
-1. Claude reads GitHub issue
-2. Claude delegates investigation to Codex
-3. Codex finds root cause and implements fix
-4. Claude reviews the fix
-5. Claude creates PR and updates issue
-```
-### Best Practices
-#### For Claude (Orchestrator)
-1. **Always think first**: Plan before delegating to workers
-2. **Use TodoWrite**: Track worker tasks and progress
-3. **Batch operations**: Spawn multiple workers when tasks are independent
-4. **Handle GitHub**: All `gh` operations should be done by Claude
-5. **Aggregate intelligently**: Combine worker outputs meaningfully
-6. **Monitor actively**: Use `BashOutput` to track worker progress
-7. **Kill stuck workers**: Use `KillBash` if workers hang
-#### For Codex (Workers)
-1. **Focused tasks**: Give Codex specific, well-defined tasks
-2. **Appropriate reasoning**: Use `low` for simple, `high` for complex
-3. **Parallel when possible**: Independent tasks should run concurrently
-4. **Clear output**: Request structured output for easy aggregation
-5. **Error handling**: Expect and handle worker failures gracefully
-6. **CRITICAL - Planning vs Implementation**:
-   - For `nnn` (planning): ALWAYS include "DO NOT modify/implement/write files"
-   - For `gogogo` (implementation): Allow file modifications
-   - Use explicit instructions: "Analyze and DESIGN ONLY" vs "Implement the following"
-### Communication Patterns
-#### Claude → Codex
-```bash
-# Direct execution with results
-result=$(codex exec -s danger-full-access "task")
-# Background with monitoring
-codex exec -s danger-full-access "task" & # run_in_background: true
-BashOutput bash_id
-```
-#### Codex → Claude
-- Returns via stdout/stderr
-- Exit codes indicate success/failure
-- Structured output (JSON, markdown) for easy parsing
-#### Claude → GitHub
-```bash
-# All GitHub operations handled by Claude
-gh issue create --title "Title" --body "Body"
-gh pr create --title "Title" --body "Body"
-gh issue comment 123 --body "Comment"
-```
-### Anti-Patterns to Avoid
-1. ❌ **Codex doing GitHub operations** - Only Claude should interact with GitHub
-2. ❌ **Claude doing file operations** - Delegate file work to Codex
-3. ❌ **Serial execution of independent tasks** - Use parallel workers
-4. ❌ **Not monitoring workers** - Always track progress with BashOutput
-5. ❌ **Over-reasoning for simple tasks** - Use appropriate reasoning levels
-6. ❌ **Under-utilizing parallelism** - Spawn multiple workers when possible
-### Performance Guidelines
-#### Reasoning Levels by Task Type
-- **minimal**: File listing, simple searches (~5-10s)
-- **low**: Code formatting, simple refactoring (~10-15s)
-- **medium**: Feature implementation, bug fixes (~15-25s)
-- **high**: Complex analysis, architecture changes (~30-60s+)
-#### Parallel Execution Limits
-- Maximum recommended concurrent workers: 5-10
-- Monitor system resources when spawning many workers
-- Use `ps aux | grep codex` to check running instances
-### Example: Complete Feature Implementation
-```bash
-# Claude's workflow for implementing a new feature
-# 1. Claude analyzes requirements and creates plan
-TodoWrite "Plan feature implementation"
-# 2. Claude spawns multiple Codex workers
-worker1=$(codex exec -s danger-full-access "Implement backend API endpoint" &)
-worker2=$(codex exec -s danger-full-access "Create frontend components" &)
-worker3=$(codex exec -s danger-full-access "Write unit tests" &)
-worker4=$(codex exec -s danger-full-access "Update documentation" &)
-# 3. Claude monitors all workers
-BashOutput $worker1
-BashOutput $worker2
-BashOutput $worker3
-BashOutput $worker4
-# 4. Claude aggregates results
-# (Combine outputs, resolve conflicts, ensure consistency)
-# 5. Claude handles GitHub
-gh issue comment $issue_number --body "Feature implemented"
-gh pr create --title "feat: New feature" --body "Details..."
-```
-### Metrics & Monitoring
-Track these metrics for optimization:
-- Worker completion times by reasoning level
-- Parallel vs serial execution time savings
-- Worker failure rates by task type
-- GitHub operation success rates
-- Overall workflow completion times
-### Migration Path
-For existing workflows:
-1. Identify file-heavy operations → Delegate to Codex
-2. Identify GitHub operations → Keep with Claude
-3. Identify independent tasks → Parallelize with multiple workers
-4. Identify complex analysis → Use high-reasoning Codex
-5. Test and optimize reasoning levels
-**Last Updated**: 2025-09-02
-**Architecture Version**: 2.0
-**Key Innovation**: Orchestrator/Worker pattern with Claude/Codex
+
+### Environment Configuration Scripts (Auto-Run)
+- **`scripts/env-config.js`**: Generates Angular environment files from root `.env`
+- **`scripts/update-csp.js`**: Updates CSP headers dynamically based on environment URLs
+- **Integration**: Both scripts run automatically on `npm start` and `npm run build`
+
+**Key Principle**: The root `.env` file is the single source of truth for ALL system configuration. No hardcoded values should exist anywhere in the codebase.

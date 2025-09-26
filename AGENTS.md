@@ -12,8 +12,18 @@ The PK monorepo groups every runtime under `apps/`. `apps/frontend/src` contains
 ## Coding Style & Naming Conventions
 Angular code should use 2-space indentation, camelCase services, kebab-case selectors, and SCSS tokens defined in `docs/css-*.md`. Rust follows edition 2021 defaults: snake_case modules/functions, PascalCase types, error handling via `anyhow` and `?`; always run `cargo fmt` and `cargo clippy`. In the bridge, follow .NET 8 standards (PascalCase classes, explicit async suffixes). Store secrets only in untracked `.env` files.
 
+## Configuration & Environment
+- Do not hardcode IP addresses or service URLs in source code—load everything from the `.env` files via the existing config bootstrap scripts before you start development.
+- If you encounter a module that bypasses `.env` or duplicates configuration values, fix the inconsistency immediately and align it with the shared environment loading helpers.
+
 ## Testing Guidelines
 Create Angular `*.spec.ts` files alongside components and keep them deterministic; `ng test`’s watch mode should stay green before merging. Back-end tests belong either in inline `#[cfg(test)]` modules or `apps/backend/tests/`; prefer `tokio::test` for async routes. Document manual scale-device checks in PRs until the dedicated Playwright e2e suite is reinstated.
 
 ## Commit & Pull Request Guidelines
 History follows Conventional Commits (`feat:`, `fix:`, etc.); add a scope (`feat(frontend): …`) when work touches one runtime. Bundle schema/config migrations with the code that relies on them. Every PR should summarize intent, note any environment changes, list the commands you ran, and include screenshots or gifs for UI updates. Request review from the owning runtime and confirm `npm run dev:all` boots clean before requesting merge.
+
+
+using playwright mcp to test  e2e
+
+use credentials  
+deacahwat / Wind@password9937

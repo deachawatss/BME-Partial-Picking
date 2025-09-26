@@ -31,29 +31,35 @@ pub struct SqlAuthService {
 impl SqlAuthService {
     /// Initialize SQL authentication service
     pub fn new() -> Result<Self> {
-        let server = env::var("TFCPILOT3_SERVER")
-            .unwrap_or_else(|_| "192.168.0.86".to_string());
+        let server = env::var("DATABASE_SERVER")
+            .or_else(|_| env::var("TFCPILOT3_SERVER"))
+            .context("DATABASE_SERVER or TFCPILOT3_SERVER must be set")?;
 
-        let port: u16 = env::var("TFCPILOT3_PORT")
-            .unwrap_or_else(|_| "49381".to_string())
+        let port: u16 = env::var("DATABASE_PORT")
+            .or_else(|_| env::var("TFCPILOT3_PORT"))
+            .context("DATABASE_PORT or TFCPILOT3_PORT must be set")?
             .parse()
-            .unwrap_or(49381);
+            .context("Invalid DATABASE_PORT value")?;
 
-        let database = env::var("PRIMARY_DB")
-            .unwrap_or_else(|_| "TFCPILOT3".to_string());
+        let database = env::var("DATABASE_NAME")
+            .or_else(|_| env::var("PRIMARY_DB"))
+            .context("DATABASE_NAME or PRIMARY_DB must be set")?;
 
-        let username = env::var("DB_USERNAME")
-            .unwrap_or_else(|_| "NSW".to_string());
+        let username = env::var("DATABASE_USERNAME")
+            .or_else(|_| env::var("DB_USERNAME"))
+            .context("DATABASE_USERNAME or DB_USERNAME must be set")?;
 
-        let password = env::var("DB_PASSWORD")
-            .unwrap_or_else(|_| "B3sp0k3".to_string());
+        let password = env::var("DATABASE_PASSWORD")
+            .or_else(|_| env::var("DB_PASSWORD"))
+            .context("DATABASE_PASSWORD or DB_PASSWORD must be set")?;
 
         let connection_string = format!(
-            "server={};port={};database={};username={};password={};TrustServerCertificate=yes;",
+            "server={},{};database={};user id={};password={};TrustServerCertificate=true;",
             server, port, database, username, password
         );
 
         info!("🗄️ SQL Auth Service initialized for database: {}", database);
+        info!("🔧 Connection string: server={};port={};database={};TrustServerCertificate=yes", server, port, database);
 
         Ok(Self {
             connection_string,

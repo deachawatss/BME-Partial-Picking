@@ -3,7 +3,7 @@ use chrono::{Duration, Utc};
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use std::env;
-use tracing::{info, warn};
+use tracing::info;
 
 use crate::sql_auth_service::SqlUser;
 
@@ -68,23 +68,20 @@ impl JwtService {
     /// Initialize JWT service with 1 week token duration
     pub fn new() -> Result<Self> {
         let secret = env::var("JWT_SECRET")
-            .unwrap_or_else(|_| "pk_partial_picking_jwt_secret_key_change_in_production".to_string());
+            .context("JWT_SECRET must be set")?;
 
-        if secret == "pk_partial_picking_jwt_secret_key_change_in_production" {
-            warn!("⚠️ Using default JWT secret - CHANGE THIS IN PRODUCTION!");
-        }
 
         let encoding_key = EncodingKey::from_secret(secret.as_bytes());
         let decoding_key = DecodingKey::from_secret(secret.as_bytes());
 
         let issuer = env::var("JWT_ISSUER")
-            .unwrap_or_else(|_| "NWFTH-PartialPicking".to_string());
+            .context("JWT_ISSUER must be set")?;
 
         // 1 week token duration (168 hours)
         let token_duration_hours = env::var("JWT_DURATION_HOURS")
-            .unwrap_or_else(|_| "168".to_string())
+            .context("JWT_DURATION_HOURS must be set")?
             .parse::<i64>()
-            .unwrap_or(168);
+            .context("JWT_DURATION_HOURS must be a valid number")?;
 
         let token_duration = Duration::hours(token_duration_hours);
 

@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, BehaviorSubject, timer, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, retry, delay, timeout } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
@@ -42,7 +42,7 @@ type ConnectionStatus = 'unknown' | 'connected' | 'disconnected';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_BASE = this.resolveApiBase();
+  private readonly API_BASE = this.getApiBaseUrl();
   private readonly TOKEN_KEY = 'pk_auth_token';
   private readonly TOKEN_DATA_KEY = 'pk_auth_token_data';
   private readonly USER_KEY = 'pk_auth_user';
@@ -122,6 +122,7 @@ export class AuthService {
     };
 
     return this.http.post<AuthResponse>(`${this.API_BASE}/auth/login`, loginData).pipe(
+      timeout(10000), // 10 second timeout for login
       tap(response => {
         if (response.success && response.token && response.user) {
           this.storeAuthData(response.token, response.user);
@@ -161,15 +162,18 @@ export class AuthService {
   }
 
   /**
-   * Test connection to backend
+   * Test connection to backend with retry logic
    */
   testConnection(): Observable<boolean> {
     return this.http.get(`${this.API_BASE}/health`, { responseType: 'text' }).pipe(
+      timeout(5000), // 5 second timeout
+      retry({ count: 3, delay: 1000 }), // Retry 3 times with 1 second delay
       map(() => {
         this._connectionStatus.set('connected');
         return true;
       }),
-      catchError(() => {
+      catchError((error: HttpErrorResponse) => {
+        console.warn('🔌 Backend connection test failed:', error.message);
         this._connectionStatus.set('disconnected');
         return of(false);
       })
@@ -208,6 +212,31 @@ export class AuthService {
     this.lastActivity.next(new Date());
     // For 1-week tokens, we don't need to reset timeout on activity
     // Token expiry is fixed at issue time
+  }
+
+  /**
+   * Get API base URL from environment configuration
+   */
+  private getApiBaseUrl(): string {
+    const rawUrl = (environment.apiUrl || '').trim();
+
+    if (rawUrl) {
+      return rawUrl;
+    }
+
+    if (typeof window !== 'undefined' && window.location) {
+      const protocol = window.location.protocol || 'http:';
+      const hostname = window.location.hostname || 'localhost';
+      const backendPort = environment.backendPort || parseInt(window.location.port, 10) || 7070;
+
+      const normalizedProtocol = protocol.endsWith(':') ? protocol.slice(0, -1) : protocol;
+      const needsPort = backendPort && !((normalizedProtocol === 'http' && backendPort === 80) || (normalizedProtocol === 'https' && backendPort === 443));
+      const portSegment = needsPort ? `:${backendPort}` : '';
+
+      return `${normalizedProtocol}://${hostname}${portSegment}/api`;
+    }
+
+    return 'http://localhost:7070/api';
   }
 
   /**
@@ -308,14 +337,28 @@ export class AuthService {
   }
 
   /**
-   * Handle authentication errors
+   * Handle authentication errors with detailed diagnostics
    */
   private handleAuthError(error: HttpErrorResponse): Observable<AuthResponse> {
     let errorMessage = 'Authentication failed';
     const isNetworkError = error.status === 0 || error.error instanceof ErrorEvent;
 
+    console.error('🔐 Auth error details:', {
+      status: error.status,
+      message: error.message,
+      url: error.url,
+      isNetworkError
+    });
+
     if (isNetworkError) {
-      errorMessage = 'Unable to reach authentication service. Ensure the backend (cargo) server is running on port 7070.';
+      // Enhanced network error diagnosis
+      const currentApiUrl = environment.apiUrl || this.API_BASE;
+      errorMessage = `Unable to connect to backend at ${currentApiUrl}. ` +
+        'Please check: (1) Backend server is running, (2) No firewall blocking connections, ' +
+        '(3) Correct URL configuration in environment.ts';
+      this._connectionStatus.set('disconnected');
+    } else if (error.message?.includes('timeout') || error.status === 408) {
+      errorMessage = `Connection timeout to backend. Server may be overloaded or unreachable at ${this.API_BASE}`;
       this._connectionStatus.set('disconnected');
     } else {
       this._connectionStatus.set('connected');
@@ -325,16 +368,21 @@ export class AuthService {
           errorMessage = 'Invalid username or password';
           break;
         case 403:
-          errorMessage = 'Access denied';
+          errorMessage = 'Access denied - insufficient permissions';
           break;
         case 404:
-          errorMessage = 'Authentication service not available';
+          errorMessage = 'Authentication endpoint not found - check backend routing';
           break;
         case 500:
-          errorMessage = 'Server error during authentication';
+          errorMessage = 'Internal server error - check backend logs';
+          break;
+        case 502:
+        case 503:
+        case 504:
+          errorMessage = 'Backend service unavailable - server may be starting up';
           break;
         default:
-          errorMessage = `Authentication failed (${error.status})`;
+          errorMessage = `Authentication failed with HTTP ${error.status}: ${error.message}`;
       }
     }
 
@@ -411,16 +459,4 @@ export class AuthService {
     return !!(token && tokenData && user && this.isTokenValid(tokenData));
   }
 
-  private resolveApiBase(): string {
-    const configured = (environment?.apiUrl ?? '').trim();
-    if (configured) {
-      return configured.replace(/\/$/, '');
-    }
-
-    if (typeof window !== 'undefined' && window.location?.origin) {
-      return `${window.location.origin.replace(/\/$/, '')}/api`;
-    }
-
-    return 'http://localhost:7070/api';
-  }
 }

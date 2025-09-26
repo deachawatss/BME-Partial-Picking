@@ -4,14 +4,18 @@
   "description": "PK (Partial Picking System) - Angular 20 Frontend with NWFTH Brown Theme",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.json",
-    "dev": "ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.json",
-    "dev:frontend": "ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.json",
-    "build": "ng build",
-    "build:prod": "ng build --configuration production",
+    "start": "npm run env:config && ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.js",
+    "dev": "npm run env:config && ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.js",
+    "dev:frontend": "npm run env:config && ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.js",
+    "build": "npm run env:config && ng build",
+    "build:prod": "npm run env:config:prod && ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "env:config": "node scripts/env-config.js development",
+    "env:config:prod": "node scripts/env-config.js production",
+    "optimize:images": "node scripts/optimize-images.js",
+    "postinstall": "node scripts/patch-http-proxy.js"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +43,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "sharp": "^0.34.4",
     "typescript": "~5.9.2"
   }
 }

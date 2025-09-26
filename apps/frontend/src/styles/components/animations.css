@@ -7,29 +7,47 @@
 /* Background Animation Classes - Based on Mobile-Rust              */
 /* =================================================================== */
 
-/* Gradient Morphing Background */
+/* Gradient Morphing Background - Pure Brown Palette */
 .animate-gradient-morph {
-  background: linear-gradient(-45deg, #523325, #6B4423, #523325, #7A4D28);
-  background-size: 400% 400%;
-  animation: gradientMorph 8s ease-in-out infinite;
+  background: linear-gradient(-45deg,
+    hsl(20, 50%, 25%),
+    hsl(22, 45%, 22%),
+    hsl(25, 48%, 28%),
+    hsl(18, 52%, 20%),
+    hsl(24, 44%, 26%),
+    hsl(21, 46%, 24%)
+  );
+  background-size: 300% 300%;
+  animation: gradientMorphOptimized 12s ease-in-out infinite;
   will-change: background-position;
+  contain: layout style paint;
+  transform: translateZ(0);
 }
 
-/* Multi-layer Particle System */
+/* Multi-layer Particle System - Fixed Viewport Containment */
+.animate-particles-layer-1,
+.animate-particles-layer-2,
+.animate-particles-layer-3 {
+  contain: layout style paint;
+  transform: translateZ(0);
+  overflow: hidden;
+}
+
 .animate-particles-layer-1::before,
 .animate-particles-layer-2::before,
 .animate-particles-layer-3::before {
   content: '';
   position: absolute;
-  background: rgba(240, 180, 41, 0.3);
   border-radius: 50%;
   will-change: transform, opacity;
+  pointer-events: none;
 }
 
 .animate-particles-layer-1::before {
   width: 4px;
   height: 4px;
-  animation: particlesLayer1 15s linear infinite;
+  background: radial-gradient(circle, rgba(240, 180, 41, 0.6) 0%, transparent 70%);
+  animation: particlesLayer1Contained 15s linear infinite;
   left: 10%;
   top: 100%;
 }
@@ -37,8 +55,8 @@
 .animate-particles-layer-2::before {
   width: 6px;
   height: 6px;
-  background: rgba(240, 180, 41, 0.2);
-  animation: particlesLayer2 20s linear infinite;
+  background: radial-gradient(circle, rgba(255, 215, 100, 0.4) 0%, transparent 70%);
+  animation: particlesLayer2Contained 20s linear infinite;
   left: 80%;
   top: 100%;
 }
@@ -46,13 +64,19 @@
 .animate-particles-layer-3::before {
   width: 3px;
   height: 3px;
-  background: rgba(240, 180, 41, 0.4);
-  animation: particlesLayer3 25s linear infinite;
+  background: radial-gradient(circle, rgba(205, 150, 50, 0.5) 0%, transparent 70%);
+  animation: particlesLayer3Contained 25s linear infinite;
   left: 50%;
   top: 100%;
 }
 
-/* Floating Orbs */
+/* Floating Orbs - Enhanced with containment */
+.animate-floating-orbs {
+  contain: layout style paint;
+  transform: translateZ(0);
+  overflow: hidden;
+}
+
 .animate-floating-orbs::before {
   content: '';
   position: absolute;
@@ -64,30 +88,36 @@
   left: 20%;
   top: 30%;
   will-change: transform, opacity;
+  pointer-events: none;
 }
 
 /* =================================================================== */
 /* Keyframe Definitions                                              */
 /* =================================================================== */
 
-@keyframes gradientMorph {
+/* Enhanced gradient animation - Better color transitions */
+@keyframes gradientMorphOptimized {
   0%, 100% {
     background-position: 0% 50%;
   }
+  25% {
+    background-position: 100% 30%;
+  }
   50% {
-    background-position: 100% 50%;
+    background-position: 50% 100%;
+  }
+  75% {
+    background-position: 30% 0%;
   }
 }
 
-@keyframes particlesLayer1 {
+/* FIXED: Particle animations that stay within viewport bounds */
+@keyframes particlesLayer1Contained {
   0% {
-    transform: translateY(100vh) translateX(-10px);
+    transform: translateY(0) translateX(-10px);
     opacity: 0;
   }
-  10% {
-    opacity: 1;
-  }
-  90% {
+  10%, 90% {
     opacity: 1;
   }
   100% {
@@ -96,15 +126,12 @@
   }
 }
 
-@keyframes particlesLayer2 {
+@keyframes particlesLayer2Contained {
   0% {
-    transform: translateY(100vh) translateX(10px);
+    transform: translateY(0) translateX(10px);
     opacity: 0;
   }
-  15% {
-    opacity: 1;
-  }
-  85% {
+  15%, 85% {
     opacity: 1;
   }
   100% {
@@ -113,15 +140,12 @@
   }
 }
 
-@keyframes particlesLayer3 {
+@keyframes particlesLayer3Contained {
   0% {
-    transform: translateY(100vh) translateX(-5px);
+    transform: translateY(0) translateX(-5px);
     opacity: 0;
   }
-  20% {
-    opacity: 1;
-  }
-  80% {
+  20%, 80% {
     opacity: 1;
   }
   100% {
@@ -360,7 +384,7 @@
 /* Accessibility & Performance                                       */
 /* =================================================================== */
 
-/* Respect user preferences */
+/* Respect user preferences for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -370,17 +394,24 @@
     transition-duration: 0.01ms !important;
   }
 
+  /* Disable background animations for reduced motion */
   .animate-gradient-morph,
   .animate-particles-layer-1,
   .animate-particles-layer-2,
   .animate-particles-layer-3,
   .animate-floating-orbs {
-    animation: none;
+    animation: none !important;
   }
 
+  /* Disable hover effects for reduced motion */
   .hover-lift:hover,
   .hover-grow:hover {
-    transform: none;
+    transform: none !important;
+  }
+
+  /* Static fallback for gradient background */
+  .animate-gradient-morph {
+    background: hsl(20, 50%, 25%);
   }
 }
 

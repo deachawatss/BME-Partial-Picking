@@ -1,5 +1,6 @@
 /* Login Component Specific Styles */
 
+
 /* Login-specific enhancements - Clean focus states */
 .login-form-container input:focus-visible,
 .login-form-container button:focus-visible {

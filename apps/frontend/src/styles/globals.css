@@ -233,6 +233,28 @@ a {
 }
 
 /* =================================================================== */
+/* Layout Control Utilities - CRITICAL for animations                */
+/* =================================================================== */
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.container-fixed {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* =================================================================== */
 /* Essential Flexbox & Grid Utilities                                 */
 /* =================================================================== */
 

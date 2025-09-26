@@ -24,11 +24,17 @@
     <!-- Header with Logo and Title -->
     <div class="text-center space-y-4">
       <div class="flex justify-center">
-        <img
-          src="assets/images/NWFLogo.jpg"
-          alt="Newly Weds Foods Thailand Logo"
-          class="h-28 w-auto mx-auto rounded shadow-sm"
-          loading="eager" />
+        <picture class="w-80 h-auto max-w-full rounded-lg shadow-lg block">
+          <source srcset="assets/images/optimized/NWFLogo-256w.webp" type="image/webp">
+          <img
+            src="assets/images/optimized/NWFLogo-256w.jpeg"
+            alt="Newly Weds Foods Thailand Logo"
+            width="256"
+            height="128"
+            loading="eager"
+            fetchpriority="high"
+            class="w-full h-auto" />
+        </picture>
       </div>
       <div>
         <h1 id="login-heading" class="text-xl font-bold text-foreground whitespace-nowrap">
@@ -117,8 +123,7 @@
       <!-- Submit Button -->
       <button
         type="submit"
-        class="nwfth-button-primary w-full min-h-touch px-6 py-3 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-        [disabled]="!canSubmit()"
+        class="nwfth-button-primary w-full min-h-touch px-6 py-3 flex items-center justify-center gap-2"
         [attr.aria-describedby]="isLoading() ? 'loading-status' : null">
 
         <!-- Loading spinner -->

@@ -30,11 +30,19 @@ export class LoginComponent implements OnInit {
   // Computed signals
   public readonly hasError = computed(() => this._loginError().length > 0);
   public readonly isConnected = computed(() => this._connectionStatus() === 'connected');
-  public readonly canSubmit = computed(() =>
-    this.loginForm?.valid &&
-    !this._isLoading() &&
-    this._connectionStatus() !== 'disconnected'
-  );
+  public readonly canSubmit = computed(() => {
+    const form = this.loginForm;
+    if (!form) return false;
+
+    const username = form.get('username');
+    const password = form.get('password');
+
+    const isUsernameValid = username?.value?.trim().length >= 2;
+    const isPasswordValid = password?.value?.trim().length >= 1;
+    const isNotLoading = !this._isLoading();
+
+    return isUsernameValid && isPasswordValid && isNotLoading;
+  });
 
   constructor(
     private fb: FormBuilder,
@@ -93,10 +101,15 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Test connection to backend
+   * Test connection to backend with retry logic
    */
-  testConnection(): void {
+  testConnection(attempt: number = 1, maxAttempts: number = 3): void {
     this._connectionStatus.set('unknown');
+
+    // If this is a retry attempt, show more specific messaging
+    if (attempt > 1) {
+      this._loginError.set(`Connecting to backend... (attempt ${attempt}/${maxAttempts})`);
+    }
 
     this.authService.testConnection().subscribe({
       next: (isConnected) => {
@@ -108,8 +121,23 @@ export class LoginComponent implements OnInit {
         }
       },
       error: () => {
-        this._connectionStatus.set('disconnected');
-        this._loginError.set('Backend server is not reachable. Start all services with `npm run dev:all` or verify the Rust backend on port 7070.');
+        // If we haven't reached max attempts, retry with exponential backoff
+        if (attempt < maxAttempts) {
+          const retryDelay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // 1s, 2s, 4s, max 5s
+          this._loginError.set(`Connection failed. Retrying in ${Math.ceil(retryDelay / 1000)}s... (${attempt}/${maxAttempts})`);
+
+          setTimeout(() => {
+            this.testConnection(attempt + 1, maxAttempts);
+          }, retryDelay);
+        } else {
+          // All retry attempts exhausted
+          this._connectionStatus.set('disconnected');
+          this._loginError.set(`Backend server is not reachable after ${maxAttempts} attempts.
+
+💡 **Solution**: Run \`npm run dev:all\` to start all services with automatic cleanup.
+
+🔧 **Technical**: This prevents port conflicts by automatically running \`npm run dev:clean\` first, then starting the Rust backend on port 7070, Angular frontend on 6060, and C# bridge service on 5000.`);
+        }
       }
     });
   }

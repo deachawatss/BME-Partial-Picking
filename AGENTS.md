@@ -23,6 +23,13 @@ Create Angular `*.spec.ts` files alongside components and keep them deterministi
 History follows Conventional Commits (`feat:`, `fix:`, etc.); add a scope (`feat(frontend): …`) when work touches one runtime. Bundle schema/config migrations with the code that relies on them. Every PR should summarize intent, note any environment changes, list the commands you ran, and include screenshots or gifs for UI updates. Request review from the owning runtime and confirm `npm run dev:all` boots clean before requesting merge.
 
 
+## Conversation Context Hygiene
+- Maintain `README.md` and `HANDOFF.md` as living documents to prevent context drift during long sessions.
+- Refresh both files proactively with purpose, architecture, stack versions, run commands, recent decisions, current status, open issues, artifacts, test results, and environment details using the provided combined prompt.
+- Trigger updates whenever omissions, contradictions, hallucinated info, or latency oddities appear; do not wait for token limits.
+- Preserve existing tool versions and configurations when refreshing; never invent upgrades without explicit direction.
+
+
 using playwright mcp to test  e2e
 
 use credentials  

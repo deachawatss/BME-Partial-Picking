@@ -18,15 +18,13 @@ Enhanced development workflow scripts for the PK (Partial Picking System) that p
 3. Hands off to `scripts/run-dev-services.js`, which monitors exits and stops the remaining services if any one fails
 
 #### `npm run dev:clean` / `npm run dev:stop`
-**Process cleanup command** - Safely kills all development processes and frees ports.
+**Process cleanup command** - Cross-platform port cleanup that frees the dev stack ports before a new run.
 
 **What it does:**
-- Kills Angular (`ng serve`) processes
-- Kills Rust (`cargo run`) processes
-- Kills .NET (`dotnet run`) processes
-- Frees ports: 5000-5005, 6060-6062, 7070
-- **Preserves Node.js** processes to avoid killing parent npm process
-- Provides detailed feedback on cleanup status
+- Scans for processes bound to the PK dev ports
+- Force-terminates anything using 6060-6062 (Angular), 7070 (Rust API), 5000-5005 (bridge)
+- Works on both Windows (`netstat` + `taskkill`) and UNIX-like systems (`lsof`/`fuser`)
+- Prints a short summary so you know whether anything was cleaned up
 
 ### Individual Service Commands
 
@@ -92,30 +90,16 @@ npm run dev:bridge
 ## Troubleshooting
 
 ### If Ports Are Still Busy
-The scripts automatically handle port cleanup, but if you encounter issues:
+Run the cleanup again; it is safe to execute multiple times:
 
 ```bash
-# Manual port cleanup
 npm run dev:clean
-
-# Check what's using ports
-netstat -tulpn | grep :6060
-netstat -tulpn | grep :7070
-netstat -tulpn | grep :5000
 ```
 
-### If Processes Won't Die
-```bash
-# Force kill by pattern
-pkill -9 -f "ng serve"
-pkill -9 -f "cargo run"
-pkill -9 -f "dotnet run"
+Need to inspect manually?
 
-# Force kill by port
-fuser -k 6060/tcp
-fuser -k 7070/tcp
-fuser -k 5000/tcp
-```
+- **macOS/Linux**: `lsof -i :7070` or `fuser -n tcp 7070`
+- **Windows**: `netstat -ano | findstr :7070` then `taskkill /PID <pid> /F`
 
 ### Service-Specific Issues
 

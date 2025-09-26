@@ -1,11 +1,11 @@
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use tiberius::{Client, Config, AuthMethod};
+use tiberius::{Client, Config};
 use tokio::net::TcpStream;
 use tokio_util::compat::{TokioAsyncWriteCompatExt, Compat};
-use tracing::{info, warn, error};
+use tracing::info;
 use std::env;
-use chrono::{DateTime, Utc, NaiveDateTime};
+use chrono::{DateTime, Utc};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct SqlUser {

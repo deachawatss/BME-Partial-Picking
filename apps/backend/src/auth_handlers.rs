@@ -7,8 +7,6 @@ use serde::{Deserialize, Serialize};
 use tracing::{info, warn, error};
 
 use crate::{
-    ldap_service::LdapService,
-    sql_auth_service::SqlAuthService,
     jwt_service::{JwtService, LoginResponse},
     AppState,
 };

@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   public readonly canSubmit = computed(() =>
     this.loginForm?.valid &&
     !this._isLoading() &&
-    this._connectionStatus() === 'connected'
+    this._connectionStatus() !== 'disconnected'
   );
 
   constructor(
@@ -102,14 +102,14 @@ export class LoginComponent implements OnInit {
       next: (isConnected) => {
         this._connectionStatus.set(isConnected ? 'connected' : 'disconnected');
         if (!isConnected) {
-          this._loginError.set('Unable to connect to server. Please check your connection.');
+          this._loginError.set('Backend server is not reachable. Start all services with `npm run dev:all` or verify the Rust backend on port 7070.');
         } else {
           this._loginError.set('');
         }
       },
       error: () => {
         this._connectionStatus.set('disconnected');
-        this._loginError.set('Backend server is not available. Please contact IT support.');
+        this._loginError.set('Backend server is not reachable. Start all services with `npm run dev:all` or verify the Rust backend on port 7070.');
       }
     });
   }
@@ -139,6 +139,9 @@ export class LoginComponent implements OnInit {
           console.log('Login successful');
         } else {
           this._loginError.set(response.message || 'Login failed');
+          if (this._connectionStatus() === 'disconnected') {
+            setTimeout(() => this.testConnection(), 1000);
+          }
         }
       },
       error: (error) => {

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:7070/api',
+  apiUrl: '/api',
 
   // Database Configuration
   primaryDatabase: 'TFCPILOT3',

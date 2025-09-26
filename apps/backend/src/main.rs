@@ -79,25 +79,6 @@ async fn root() -> &'static str {
     "PK Backend Server - Rust + Axum"
 }
 
-async fn health_check() -> StatusCode {
-    StatusCode::OK
-}
-
-async fn mock_login() -> Result<Json<Value>, StatusCode> {
-    // Mock successful login response
-    Ok(Json(json!({
-        "success": true,
-        "message": "Login successful",
-        "token": "mock_jwt_token_123456789",
-        "user": {
-            "id": "user_001",
-            "username": "testuser",
-            "displayName": "Test User",
-            "workstationId": "WS-001",
-            "roles": ["picker", "operator"]
-        }
-    })))
-}
 
 async fn mock_runs() -> Result<Json<Value>, StatusCode> {
     // Mock partial picking runs

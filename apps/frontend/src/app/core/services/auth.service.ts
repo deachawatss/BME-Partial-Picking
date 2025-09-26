@@ -1,8 +1,9 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError, BehaviorSubject, timer } from 'rxjs';
-import { catchError, map, tap, switchMap } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, timer, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 // Authentication Token Interface
 interface AuthToken {
@@ -41,7 +42,7 @@ type ConnectionStatus = 'unknown' | 'connected' | 'disconnected';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_BASE = 'http://localhost:7070/api';
+  private readonly API_BASE = this.resolveApiBase();
   private readonly TOKEN_KEY = 'pk_auth_token';
   private readonly TOKEN_DATA_KEY = 'pk_auth_token_data';
   private readonly USER_KEY = 'pk_auth_user';
@@ -191,7 +192,7 @@ export class AuthService {
     }).pipe(
       tap(response => {
         if (response.success && response.token && response.user) {
-          this.setAuthData(response.token, response.user);
+          this.storeAuthData(response.token, response.user);
           this.setupSessionTimeout();
           this.updateLastActivity();
         }
@@ -311,12 +312,14 @@ export class AuthService {
    */
   private handleAuthError(error: HttpErrorResponse): Observable<AuthResponse> {
     let errorMessage = 'Authentication failed';
+    const isNetworkError = error.status === 0 || error.error instanceof ErrorEvent;
 
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Connection error: ${error.error.message}`;
+    if (isNetworkError) {
+      errorMessage = 'Unable to reach authentication service. Ensure the backend (cargo) server is running on port 7070.';
+      this._connectionStatus.set('disconnected');
     } else {
-      // Server-side error
+      this._connectionStatus.set('connected');
+
       switch (error.status) {
         case 401:
           errorMessage = 'Invalid username or password';
@@ -335,12 +338,10 @@ export class AuthService {
       }
     }
 
-    this._connectionStatus.set('disconnected');
-
-    return throwError(() => ({
+    return of({
       success: false,
       message: errorMessage
-    }));
+    });
   }
 
   /**
@@ -408,5 +409,18 @@ export class AuthService {
     const token = this.getToken();
 
     return !!(token && tokenData && user && this.isTokenValid(tokenData));
+  }
+
+  private resolveApiBase(): string {
+    const configured = (environment?.apiUrl ?? '').trim();
+    if (configured) {
+      return configured.replace(/\/$/, '');
+    }
+
+    if (typeof window !== 'undefined' && window.location?.origin) {
+      return `${window.location.origin.replace(/\/$/, '')}/api`;
+    }
+
+    return 'http://localhost:7070/api';
   }
 }

@@ -37,19 +37,6 @@
       </div>
     </div>
 
-    <!-- Authentication Info -->
-    @if (isConnected()) {
-      <div class="nwfth-info-box">
-        <p class="nwfth-info-title">🔐 Dual Authentication Available</p>
-        <ul class="nwfth-auth-methods">
-          <li>✅ <strong>LDAP/Active Directory</strong> - For domain users</li>
-          <li>✅ <strong>Local Database</strong> - For local accounts</li>
-        </ul>
-        <p class="nwfth-info-note">
-          The system will automatically detect and use the appropriate authentication method based on your user configuration.
-        </p>
-      </div>
-    }
 
     <!-- Login Form -->
     <form
@@ -153,8 +140,8 @@
         </div>
       </button>
 
-      <!-- Connection Status Alert (moved under Sign In button) -->
-      <div class="flex justify-center" *ngIf="connectionStatus() === 'disconnected'">
+      <!-- Connection Status Alert (shows connected/disconnected) -->
+      <div class="flex justify-center">
         <div
           class="relative flex items-center gap-3 px-4 py-2 rounded-lg border-2 font-medium text-sm transition-all duration-300"
           [ngClass]="getConnectionStatusClass()"

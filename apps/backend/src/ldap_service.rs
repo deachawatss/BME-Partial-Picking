@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use ldap3::{LdapConn, Scope, SearchEntry};
 use serde::{Deserialize, Serialize};
-use tracing::{info, warn, error};
+use tracing::info;
 use std::env;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

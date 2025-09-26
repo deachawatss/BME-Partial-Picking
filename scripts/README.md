@@ -15,7 +15,7 @@ Enhanced development workflow scripts for the PK (Partial Picking System) that p
    - Angular frontend on `:6060`
    - Rust backend on `:7070`
    - C# bridge service on `:5000`
-3. Uses `--kill-others-on-fail` to stop all services if any fails
+3. Hands off to `scripts/run-dev-services.js`, which monitors exits and stops the remaining services if any one fails
 
 #### `npm run dev:clean` / `npm run dev:stop`
 **Process cleanup command** - Safely kills all development processes and frees ports.
@@ -51,9 +51,9 @@ Automatically manages these ports:
 - **5001-5005**: Individual scale bridge services
 
 ### Concurrency Features
-- **Parallel startup**: All services start simultaneously
-- **Failure handling**: `--kill-others-on-fail` stops all if any service fails
-- **Process isolation**: Each service runs independently
+- **Parallel startup**: All services start simultaneously via the Node orchestrator
+- **Failure handling**: If any service exits non-zero, the orchestrator sends `SIGTERM` to the rest and escalates to `SIGKILL` after a grace period
+- **Process isolation**: Each service runs independently with mirrored console output
 
 ## Usage Examples
 
@@ -66,10 +66,10 @@ Output:
 🔄 Stopping PK development processes...
 ✅ All development processes stopped successfully
 🚀 Ready to start fresh development services
-
-[0] Angular dev server starting...
-[1] Rust backend compiling...
-[2] C# bridge service starting...
+🚀 Starting PK dev services (frontend, backend, bridge)...
+...frontend/ng serve logs...
+...backend cargo logs...
+...bridge dotnet logs...
 ```
 
 ### Emergency Stop

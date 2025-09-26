@@ -43,6 +43,31 @@
 /* =================================================================== */
 
 /* Extended NWFTH Brand Colors */
+.text-brand-brown {
+  color: hsl(var(--color-brand-brown-hsl));
+}
+
+.text-brand-amber {
+  color: hsl(var(--color-brand-amber-hsl));
+}
+
+.text-brand-cream {
+  color: hsl(var(--color-brand-cream-hsl));
+}
+
+.bg-brand-brown {
+  background-color: hsl(var(--color-brand-brown-hsl));
+}
+
+.bg-brand-amber {
+  background-color: hsl(var(--color-brand-amber-hsl));
+}
+
+.bg-brand-cream {
+  background-color: hsl(var(--color-brand-cream-hsl));
+}
+
+/* Legacy Support - Gradually migrate to brand-* naming */
 .text-nwfth-brown {
   color: var(--color-brand-brown);
 }
@@ -134,6 +159,37 @@
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
 
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+/* Enhanced Brand Color Gradients */
+.from-brand-brown {
+  --tw-gradient-from: hsl(var(--color-brand-brown-hsl));
+  --tw-gradient-to: hsl(var(--color-brand-brown-hsl) / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-brand-amber {
+  --tw-gradient-from: hsl(var(--color-brand-amber-hsl));
+  --tw-gradient-to: hsl(var(--color-brand-amber-hsl) / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.via-brand-brown\/80 {
+  --tw-gradient-to: hsl(var(--color-brand-brown-hsl) / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), hsl(var(--color-brand-brown-hsl) / 0.8), var(--tw-gradient-to);
+}
+
+.to-brand-brown\/90 {
+  --tw-gradient-to: hsl(var(--color-brand-brown-hsl) / 0.9);
+}
+
+.to-brand-amber\/20 {
+  --tw-gradient-to: hsl(var(--color-brand-amber-hsl) / 0.2);
+}
+
+/* Legacy Gradient Support */
 .from-nwfth-brown {
   --tw-gradient-from: var(--color-brand-brown);
   --tw-gradient-to: rgba(82, 51, 37, 0);

@@ -83,24 +83,14 @@
         </div>
       </div>
 
-      <!-- Bag Weight -->
-      <div class="form-field">
-        <label class="field-label">Bag Weight</label>
-        <div class="field-input-group">
-          <input type="number" class="field-input number-input"
-                 formControlName="bagWeight"
-                 [value]="formatNumber(partialPickingData().bagWeight)" />
-          <button class="calculator-button" (click)="onCalculateBagWeight()">📟</button>
-        </div>
-      </div>
-
       <!-- Weight - Critical Field with Emphasis -->
       <div class="form-field weight-field">
         <label class="field-label">Weight</label>
         <div class="weight-input-group">
           <input type="number" class="field-input weight-input"
                  formControlName="weight"
-                 [class]="getWeightStatusClass()"
+                 [class.weight-in-range]="isWeightInRange()"
+                 [class.weight-out-of-range]="!isWeightInRange() && partialPickingData().weight > 0"
                  [value]="formatNumber(partialPickingData().weight)" />
           <button class="fetch-weight-button"
                   (click)="onFetchWeight()"
@@ -111,6 +101,35 @@
               Fetch Weight
             }
           </button>
+        </div>
+
+        <!-- Progressive Weight Bar -->
+        <div class="weight-progress-container">
+          <div class="weight-progress-bar">
+            <div class="weight-progress-fill"
+                 [class.in-tolerance]="isWeightInRange()"
+                 [class.out-of-tolerance]="!isWeightInRange() && partialPickingData().weight > 0"
+                 [style.width.%]="partialPickingData().weight > 0 ? 75 : 0"></div>
+            <div class="weight-progress-indicator"
+                 [style.left.%]="partialPickingData().weight > 0 ? 70 : 0"></div>
+          </div>
+          <div class="weight-progress-labels">
+            <span>{{ formatNumber(partialPickingData().weightRangeMin) }} kg</span>
+            <span>Target Range</span>
+            <span>{{ formatNumber(partialPickingData().weightRangeMax) }} kg</span>
+          </div>
+          <div class="weight-status-text"
+               [class.in-tolerance]="isWeightInRange()"
+               [class.out-of-tolerance]="!isWeightInRange() && partialPickingData().weight > 0"
+               [class.neutral]="partialPickingData().weight === 0">
+            @if (partialPickingData().weight === 0) {
+              Ready for weighing
+            } @else if (isWeightInRange()) {
+              Weight within tolerance
+            } @else {
+              Weight outside tolerance
+            }
+          </div>
         </div>
       </div>
 

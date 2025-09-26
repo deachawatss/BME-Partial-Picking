@@ -4,9 +4,9 @@
   "description": "PK (Partial Picking System) - Angular 20 Frontend with NWFTH Brown Theme",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 6060 --host 0.0.0.0",
-    "dev": "ng serve --port 6060 --host 0.0.0.0",
-    "dev:frontend": "ng serve --port 6060 --host 0.0.0.0",
+    "start": "ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.json",
+    "dev": "ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.json",
+    "dev:frontend": "ng serve --port 6060 --host 0.0.0.0 --proxy-config proxy.conf.json",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",

@@ -11,6 +11,7 @@ interface BatchTicketPartial {
   partial: number;
   weighted: number;
   balance: number;
+  allergens?: string;
 }
 
 interface PartialPickingData {
@@ -31,6 +32,8 @@ interface PartialPickingData {
   weightRangeMax: number;
   totalNeeded: number;
   remainingQty: number;
+  unitOfMeasure: string;
+  binSOHDisplay: string;
 }
 
 @Component({
@@ -47,35 +50,28 @@ export class PartialPickingComponent implements OnInit {
   private _isLoading = signal<boolean>(false);
   private _errorMessage = signal<string>('');
   private _partialPickingData = signal<PartialPickingData>({
-    runNo: '600015',
-    batchNo: '850857',
-    itemKey: 'INSUGW04',
-    description: 'Sugar Refine',
-    fgItemKey: 'PRD10A03',
-    fgDescription: 'Premix Specialty Blend-New(for TD100A03)',
-    batches: 8,
-    productionDate: '24/09/25',
+    runNo: '',
+    batchNo: '',
+    itemKey: '',
+    description: '',
+    fgItemKey: '',
+    fgDescription: '',
+    batches: 0,
+    productionDate: '',
     lotNo: '',
-    binNo: '1329',
-    binCapacity: '4293 KG',
-    bagWeight: 0.0000,
-    weight: 0.0000,
-    weightRangeMin: 19.976000,
-    weightRangeMax: 20.025000,
-    totalNeeded: 20.0000,
-    remainingQty: 20.0000
+    binNo: '',
+    binCapacity: '',
+    bagWeight: 0,
+    weight: 0,
+    weightRangeMin: 0,
+    weightRangeMax: 0,
+    totalNeeded: 0,
+    remainingQty: 0,
+    unitOfMeasure: '',
+    binSOHDisplay: ''
   });
 
-  private _batchTicketPartials = signal<BatchTicketPartial[]>([
-    { item: 'INFULM01', batchNo: '850857', partial: 10.0000, weighted: 10.0000, balance: 0.0000 },
-    { item: 'INSUGW04', batchNo: '850858', partial: 20.0000, weighted: 20.0000, balance: 0.0000 },
-    { item: 'INSUGW04', batchNo: '850859', partial: 20.0000, weighted: 20.0000, balance: 0.0000 },
-    { item: 'INSUGW04', batchNo: '850860', partial: 20.0000, weighted: 20.0000, balance: 0.0000 },
-    { item: 'INSUGW04', batchNo: '850861', partial: 20.0000, weighted: 20.0000, balance: 0.0000 },
-    { item: 'INSUGW04', batchNo: '850862', partial: 20.0000, weighted: 20.0000, balance: 0.0000 },
-    { item: 'INSUGW04', batchNo: '850863', partial: 20.0000, weighted: 20.0000, balance: 0.0000 },
-    { item: 'INSUGW04', batchNo: '850864', partial: 20.0000, weighted: 20.0000, balance: 0.0000 }
-  ]);
+  private _batchTicketPartials = signal<BatchTicketPartial[]>([]);
 
   // Public readonly signals
   public readonly isLoading = this._isLoading.asReadonly();
@@ -151,6 +147,37 @@ export class PartialPickingComponent implements OnInit {
 
     // Mock API call - in real implementation, this would fetch from backend
     setTimeout(() => {
+      this._partialPickingData.set({
+        runNo: 'PR001-2025',
+        batchNo: 'B2025001',
+        itemKey: 'INFULM01',
+        description: 'Infused Milk Powder Premium',
+        fgItemKey: 'FG-MILK-001',
+        fgDescription: 'Finished Goods - Premium Milk Formula',
+        batches: 5,
+        productionDate: '2025-01-15',
+        lotNo: 'LOT-ML-2025-001',
+        binNo: 'BIN-A-001',
+        binCapacity: '500.0000 KG',
+        bagWeight: 25.0000,
+        weight: 19.9850,
+        weightRangeMin: 19.0000,
+        weightRangeMax: 21.0000,
+        totalNeeded: 100.0000,
+        remainingQty: 75.2150,
+        unitOfMeasure: 'KG',
+        binSOHDisplay: '245.7500 KG'
+      });
+
+      this._batchTicketPartials.set([
+        { item: 'INFULM01', batchNo: 'B2025001', partial: 25.0000, weighted: 19.9850, balance: 5.0150, allergens: 'Milk' },
+        { item: 'INFULM02', batchNo: 'B2025002', partial: 30.0000, weighted: 0.0000, balance: 30.0000, allergens: 'Milk, Soy' },
+        { item: 'INFULM03', batchNo: 'B2025003', partial: 45.0000, weighted: 0.0000, balance: 45.0000 },
+        { item: 'SUGAR01', batchNo: 'B2025004', partial: 15.5000, weighted: 0.0000, balance: 15.5000 },
+        { item: 'VITAPACK', batchNo: 'B2025005', partial: 2.5000, weighted: 0.0000, balance: 2.5000, allergens: 'None' }
+      ]);
+
+      this.updateFormValues();
       this._isLoading.set(false);
     }, 500);
   }

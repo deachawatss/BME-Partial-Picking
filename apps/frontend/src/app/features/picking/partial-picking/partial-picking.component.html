@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <!-- Header Row 2: Batch No and Batches Info -->
+    <!-- Header Row 2: Batch No, Batches Info, Tabs -->
     <div class="header-row header-row-with-tabs">
       <div class="header-field">
         <label class="field-label">Batch No</label>
@@ -184,7 +184,14 @@
                 </thead>
                 <tbody>
                   @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
-                    <tr (click)="onSelectBatchRow(i)" [class.selected]="item.item === 'INFULM01'">
+                    <tr
+                      (click)="onSelectBatchRow(i)"
+                      (keydown.enter)="onSelectBatchRow(i)"
+                      (keydown.space)="onSelectBatchRow(i); $event.preventDefault()"
+                      [class.selected]="isBatchRowSelected(i)"
+                      [attr.aria-selected]="isBatchRowSelected(i)"
+                      tabindex="0"
+                    >
                       <td>{{ item.item }}</td>
                       <td>{{ item.batchNo }}</td>
                       <td class="numeric">{{ formatNumber(item.partial) }}</td>
@@ -199,6 +206,8 @@
           </section>
         </div>
       </div>
+
+    </div>
 
     <footer class="footer-actions">
       <div class="operator-info">

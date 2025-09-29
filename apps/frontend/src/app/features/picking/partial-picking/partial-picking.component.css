@@ -26,7 +26,7 @@
   padding: 20px 28px 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
 .screen-title {
@@ -251,10 +251,11 @@
 /* Header Rows - Full Width */
 .header-row {
   display: grid;
-  grid-template-columns: 420px 1fr auto;
+  grid-template-columns: 420px 1fr;
   gap: 16px;
   margin-bottom: 2px;
   align-items: center;
+  padding-left: 6px;
 }
 
 .header-row-with-tabs {
@@ -275,8 +276,8 @@
 
 .header-tabs {
   justify-self: end;
+  align-self: end;
   display: flex;
-  align-items: center;
 }
 
 .field-label {
@@ -297,7 +298,7 @@
   align-items: start;
   min-height: 0;
   justify-items: stretch;
-  margin-top: -10px;
+  margin-top: 0;
 }
 
 .form-column {
@@ -308,13 +309,13 @@
 .table-column {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   max-width: 700px;
   min-width: 0;
   justify-self: end;
   margin-left: auto;
-  margin-top: -14px;
+  margin-top: 0;
 }
 
 .form-table {
@@ -623,6 +624,10 @@
     gap: 30px;
   }
 
+  .header-row-with-tabs {
+    grid-template-columns: 380px 1fr auto;
+  }
+
   .main-content {
     grid-template-columns: 380px 1fr;
     gap: 40px;
@@ -639,10 +644,18 @@
     gap: 8px;
   }
 
+  .header-row-with-tabs {
+    grid-template-columns: 1fr;
+  }
+
   .header-field {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+  }
+
+  .header-tabs {
+    justify-self: flex-start;
   }
 
   .main-content {

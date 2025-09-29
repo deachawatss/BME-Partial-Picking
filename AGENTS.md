@@ -25,8 +25,9 @@ History follows Conventional Commits (`feat:`, `fix:`, etc.); add a scope (`feat
 
 ## MCP Usage Requirements
 - Always call the `angular-cli__get_best_practices` MCP before touching Angular code so that new work follows the latest recommended patterns (standalone components, typed forms, modern control flow).
-- When the user requests end-to-end validation, run the Playwright MCP client to execute the relevant e2e flows. Use the provided credentials (`deachawat` / `Wind@password9937`) when authentication is needed.
+- When the user requests end-to-end validation, run the Playwright MCP client or chrome-dev-tools to execute the relevant e2e flows. Use the provided credentials (`deachawat` / `Wind@password9937`) when authentication is needed.
 - Inspect live data and schema details through the SQL Server MCP. Treat column names as case-sensitive when writing queries or code to keep compatibility with production parity.
+- For any GitHub-related work (reviews, PRs, issues, workflows), use the GitHub MCP tools so all actions go through the official API.
 - Anytime you are uncertain about standards, compatibility with current versions, dependency impacts, or diagnosing errors, consult the documentation via the Context7 MCP before proceeding.
 
 

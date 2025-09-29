@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, computed, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -45,7 +45,8 @@ interface PartialPickingData {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, WeightProgressBarComponent],
   templateUrl: './partial-picking.component.html',
-  styleUrls: ['./partial-picking.component.css']
+  styleUrls: ['./partial-picking.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PartialPickingComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
@@ -79,6 +80,7 @@ export class PartialPickingComponent implements OnInit, OnDestroy {
   });
 
   private _batchTicketPartials = signal<BatchTicketPartial[]>([]);
+  private _selectedBatchIndex = signal<number | null>(null);
 
   // Weight and scale signals
   private _currentWeight = signal<number>(0);
@@ -92,6 +94,16 @@ export class PartialPickingComponent implements OnInit, OnDestroy {
   public readonly errorMessage = this._errorMessage.asReadonly();
   public readonly partialPickingData = this._partialPickingData.asReadonly();
   public readonly batchTicketPartials = this._batchTicketPartials.asReadonly();
+  public readonly selectedBatchIndex = this._selectedBatchIndex.asReadonly();
+  public readonly selectedBatch = computed(() => {
+    const index = this._selectedBatchIndex();
+    if (index === null) {
+      return null;
+    }
+
+    const batches = this._batchTicketPartials();
+    return batches[index] ?? null;
+  });
 
   // Weight-related public signals
   public readonly currentWeight = this._currentWeight.asReadonly();
@@ -254,6 +266,7 @@ export class PartialPickingComponent implements OnInit, OnDestroy {
         { item: 'VITAPACK', batchNo: 'B2025005', partial: 2.5000, weighted: 0.0000, balance: 2.5000, allergens: 'None' }
       ]);
 
+      this.syncSelectedBatch();
       this.updateFormValues();
       this._isLoading.set(false);
     }, 500);
@@ -471,8 +484,28 @@ export class PartialPickingComponent implements OnInit, OnDestroy {
    * Handle table row selection
    */
   onSelectBatchRow(index: number): void {
-    console.log(`Selected batch row ${index}`);
-    // In real implementation, this would highlight the row and possibly load related data
+    const batches = this._batchTicketPartials();
+    const selected = batches[index];
+
+    if (!selected) {
+      return;
+    }
+
+    this._selectedBatchIndex.set(index);
+    this._partialPickingData.update(data => ({
+      ...data,
+      itemKey: selected.item,
+      batchNo: selected.batchNo,
+      bagWeight: selected.partial,
+      weight: selected.weighted,
+      remainingQty: selected.balance
+    }));
+
+    this.updateFormValues();
+  }
+
+  isBatchRowSelected(index: number): boolean {
+    return this._selectedBatchIndex() === index;
   }
 
   /**
@@ -602,5 +635,29 @@ export class PartialPickingComponent implements OnInit, OnDestroy {
     } else {
       return 'Weight in range - waiting for stability...';
     }
+  }
+
+  private syncSelectedBatch(): void {
+    const batches = this._batchTicketPartials();
+
+    if (batches.length === 0) {
+      this._selectedBatchIndex.set(null);
+      return;
+    }
+
+    const currentData = this._partialPickingData();
+    const matchedIndex = batches.findIndex(batch => batch.item === currentData.itemKey && batch.batchNo === currentData.batchNo);
+    const resolvedIndex = matchedIndex >= 0 ? matchedIndex : 0;
+    const resolvedBatch = batches[resolvedIndex];
+
+    this._selectedBatchIndex.set(resolvedIndex);
+    this._partialPickingData.update(data => ({
+      ...data,
+      itemKey: resolvedBatch.item,
+      batchNo: resolvedBatch.batchNo,
+      bagWeight: resolvedBatch.partial,
+      weight: resolvedBatch.weighted,
+      remainingQty: resolvedBatch.balance
+    }));
   }
 }

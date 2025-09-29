@@ -11,76 +11,63 @@
       (reconnectScale)="onReconnectScale()">
     </app-weight-progress-bar>
 
-    <section class="section-frame">
-      <table class="header-table">
-        <colgroup>
-          <col class="col-label" />
-          <col class="col-field" />
-          <col class="col-label" />
-          <col />
-        </colgroup>
-        <tbody>
-          <tr>
-            <th scope="row">Run No</th>
-            <td>
-              <div class="input-wrap">
-                <input type="text" formControlName="runNo" />
-                <button type="button" class="lookup-btn" (click)="onLookup('runNo')" aria-label="Lookup run number">🔍</button>
-              </div>
-            </td>
-            <th scope="row">FG Item Key</th>
-            <td class="fg-cell">
-              <div class="fg-key">{{ partialPickingData().fgItemKey }}</div>
-              <div class="fg-desc">{{ partialPickingData().fgDescription }}</div>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">Batch No</th>
-            <td>
-              <div class="input-wrap">
-                <input type="text" formControlName="batchNo" />
-                <button type="button" class="lookup-btn" (click)="onLookup('batchNo')" aria-label="Lookup batch number">🔍</button>
-              </div>
-            </td>
-            <th scope="row">Batches</th>
-            <td>
-              <div class="meta-inline">
-                <span class="meta-box">{{ partialPickingData().batches }}</span>
-                <span class="meta-separator">@</span>
-                <span class="meta-box">1.0000</span>
-                <span class="meta-label">Production Date</span>
-                <span class="meta-box">{{ partialPickingData().productionDate }}</span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    <!-- Header Row 1: Run No and FG Item Key -->
+    <div class="header-row">
+      <div class="header-field">
+        <label class="field-label">Run No</label>
+        <div class="input-wrap">
+          <input type="text" formControlName="runNo" />
+          <button type="button" class="lookup-btn" (click)="onLookup('runNo')" aria-label="Lookup run number">🔍</button>
+        </div>
+      </div>
+      <div class="header-field fg-field">
+        <label class="field-label">FG Item Key</label>
+        <div class="fg-cell">
+          <div class="fg-key">{{ partialPickingData().fgItemKey }}</div>
+          <div class="fg-desc">{{ partialPickingData().fgDescription }}</div>
+        </div>
+      </div>
+    </div>
 
-    <div class="body-section">
-      <section class="form-panel">
+    <!-- Header Row 2: Batch No and Batches Info -->
+    <div class="header-row">
+      <div class="header-field">
+        <label class="field-label">Batch No</label>
+        <div class="input-wrap">
+          <input type="text" formControlName="batchNo" />
+          <button type="button" class="lookup-btn" (click)="onLookup('batchNo')" aria-label="Lookup batch number">🔍</button>
+        </div>
+      </div>
+      <div class="header-field batch-field">
+        <label class="field-label">Batches</label>
+        <div class="meta-inline">
+          <span class="meta-box">{{ partialPickingData().batches }}</span>
+          <span class="meta-separator">@</span>
+          <span class="meta-box">1.0000</span>
+          <span class="meta-label">Production Date</span>
+          <span class="meta-box">{{ partialPickingData().productionDate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content: Form Left, Table Right -->
+    <div class="main-content">
+      <div class="form-column">
         <table class="form-table">
-          <colgroup>
-            <col class="col-label" />
-            <col class="col-field" />
-            <col class="col-util" />
-            <col class="col-field" />
-          </colgroup>
           <tbody>
             <tr>
               <th scope="row">Item Key</th>
-              <td colspan="2">
+              <td>
                 <div class="input-wrap">
                   <input type="text" formControlName="itemKey" />
+                  <button type="button" class="lookup-btn" (click)="onLookup('itemKey')" aria-label="Lookup item key">🔍</button>
                 </div>
               </td>
-              <td>
-                <button type="button" class="lookup-btn" (click)="onLookup('itemKey')" aria-label="Lookup item key">🔍</button>
-              </td>
+              <td class="kg-label">KG</td>
             </tr>
             <tr>
               <th scope="row">Description</th>
-              <td colspan="3">
+              <td colspan="2">
                 <div class="input-wrap">
                   <input type="text" formControlName="description" />
                 </div>
@@ -91,14 +78,13 @@
               <td>
                 <div class="input-wrap">
                   <input type="text" formControlName="lotNo" />
+                  <button type="button" class="lookup-btn" (click)="onLookup('lotNo')" aria-label="Lookup lot number">🔍</button>
                 </div>
               </td>
-              <td>
-                <button type="button" class="lookup-btn" (click)="onLookup('lotNo')" aria-label="Lookup lot number">🔍</button>
-              </td>
-              <td>
+              <td class="soh-field">
+                <label class="soh-label">SOH</label>
                 <div class="input-wrap inline-tag">
-                  <input type="text" value="SOH" readonly />
+                  <input type="text" [value]="partialPickingData().binSOHDisplay" readonly />
                 </div>
               </td>
             </tr>
@@ -107,12 +93,10 @@
               <td>
                 <div class="input-wrap">
                   <input type="text" formControlName="binNo" />
+                  <button type="button" class="lookup-btn" (click)="onLookup('binNo')" aria-label="Lookup bin number">🔍</button>
                 </div>
               </td>
-              <td>
-                <button type="button" class="lookup-btn" (click)="onLookup('binNo')" aria-label="Lookup bin number">🔍</button>
-              </td>
-              <td>
+              <td class="soh-display">
                 <div class="input-wrap inline-tag">
                   <input type="text" [value]="partialPickingData().binSOHDisplay" readonly />
                 </div>
@@ -120,26 +104,24 @@
             </tr>
             <tr>
               <th scope="row">Bag Weight</th>
-              <td colspan="2">
+              <td>
                 <div class="input-wrap">
                   <input type="number" [value]="formatNumber(partialPickingData().bagWeight)" readonly />
                 </div>
               </td>
-              <td>
-                <div class="meta-inline">
-                  <button type="button" class="square-btn" (click)="onCalculateBagWeight()" aria-label="Calculate bag weight">🧮</button>
-                  <button type="button" class="square-btn" (click)="onLookup('bagWeight')" aria-label="Bag weight presets">🗂</button>
-                </div>
+              <td class="weight-controls">
+                <button type="button" class="square-btn" (click)="onCalculateBagWeight()" aria-label="Calculate bag weight">🧮</button>
+                <button type="button" class="square-btn" (click)="onLookup('bagWeight')" aria-label="Bag weight presets">🗂</button>
               </td>
             </tr>
             <tr>
               <th scope="row">Weight</th>
-              <td colspan="2">
+              <td>
                 <div class="input-wrap" [class.weight-in-range]="isFormWeightInRange()" [class.weight-out-of-range]="!isFormWeightInRange() && partialPickingData().weight > 0">
                   <input type="number" formControlName="weight" inputmode="decimal" [value]="getCurrentWeightDisplay()" readonly />
                 </div>
               </td>
-              <td>
+              <td class="fetch-controls">
                 <button type="button" class="fetch-btn" (click)="onFetchWeight()" [disabled]="isLoading()">
                   @if (isLoading()) {
                     <span class="spinner"></span>
@@ -152,7 +134,7 @@
             </tr>
             <tr>
               <th scope="row">Weight Range</th>
-              <td colspan="3">
+              <td colspan="2">
                 <div class="range-row">
                   <div class="input-wrap">
                     <input type="number" [value]="formatNumber(partialPickingData().weightRangeMin)" readonly />
@@ -166,7 +148,7 @@
             </tr>
             <tr>
               <th scope="row">Total Needed</th>
-              <td colspan="3">
+              <td colspan="2">
                 <div class="input-wrap">
                   <input type="number" [value]="formatNumber(partialPickingData().totalNeeded)" readonly />
                 </div>
@@ -174,20 +156,20 @@
             </tr>
             <tr>
               <th scope="row">Remaining Qty</th>
-              <td colspan="3">
+              <td colspan="2">
                 <div class="range-row">
                   <div class="input-wrap">
                     <input type="number" [value]="formatNumber(partialPickingData().remainingQty)" readonly />
                   </div>
-                  <span class="help-note">*Intermediate</span>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
-      </section>
+      </div>
 
-      <section class="table-panel">
+      <div class="table-column">
+        <section class="table-panel">
         <div class="table-panel-header">
           <div class="table-title">Batch Ticket Partials</div>
           <div class="tab-strip">
@@ -229,7 +211,8 @@
             </tbody>
           </table>
         </div>
-      </section>
+        </section>
+      </div>
     </div>
 
     <footer class="footer-actions">

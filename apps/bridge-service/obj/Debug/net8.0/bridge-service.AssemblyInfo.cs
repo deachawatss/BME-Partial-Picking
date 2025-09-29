@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("pk-bridge-service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3ddbc2cf9c12fb6c6e57a7746b262053d547c6c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd3feeb56490816d81ae4da789f82aa04cea8e43")]
 [assembly: System.Reflection.AssemblyProductAttribute("pk-bridge-service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("pk-bridge-service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

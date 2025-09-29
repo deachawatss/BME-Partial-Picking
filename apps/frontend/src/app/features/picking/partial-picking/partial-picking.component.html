@@ -23,8 +23,8 @@
       <div class="header-field fg-field">
         <label class="field-label">FG Item Key</label>
         <div class="fg-cell">
-          <div class="fg-key">{{ partialPickingData().fgItemKey }}</div>
-          <div class="fg-desc">{{ partialPickingData().fgDescription }}</div>
+          <span class="fg-key">{{ partialPickingData().fgItemKey }}</span>
+          <span class="fg-desc">{{ partialPickingData().fgDescription }}</span>
         </div>
       </div>
     </div>
@@ -82,10 +82,7 @@
                 </div>
               </td>
               <td class="soh-field">
-                <label class="soh-label">SOH</label>
-                <div class="input-wrap inline-tag">
-                  <input type="text" [value]="partialPickingData().binSOHDisplay" readonly />
-                </div>
+                <span class="soh-text">SOH</span>
               </td>
             </tr>
             <tr>
@@ -97,21 +94,10 @@
                 </div>
               </td>
               <td class="soh-display">
-                <div class="input-wrap inline-tag">
-                  <input type="text" [value]="partialPickingData().binSOHDisplay" readonly />
+                <div class="soh-value-wrap">
+                  <span class="soh-value">{{ binSohValue() }}</span>
+                  <span class="soh-unit">{{ binSohUnit() }}</span>
                 </div>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">Bag Weight</th>
-              <td>
-                <div class="input-wrap">
-                  <input type="number" [value]="formatNumber(partialPickingData().bagWeight)" readonly />
-                </div>
-              </td>
-              <td class="weight-controls">
-                <button type="button" class="square-btn" (click)="onCalculateBagWeight()" aria-label="Calculate bag weight">🧮</button>
-                <button type="button" class="square-btn" (click)="onLookup('bagWeight')" aria-label="Bag weight presets">🗂</button>
               </td>
             </tr>
             <tr>

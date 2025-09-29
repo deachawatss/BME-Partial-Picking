@@ -100,6 +100,30 @@ export class PartialPickingComponent implements OnInit, OnDestroy {
 
   // Computed signals
   public readonly hasError = computed(() => this._errorMessage().length > 0);
+  public readonly binSohValue = computed(() => {
+    const display = (this._partialPickingData().binSOHDisplay ?? '').trim();
+    if (!display) {
+      return '';
+    }
+
+    const parts = display.split(/\s+/).filter(Boolean);
+    return parts[0] ?? '';
+  });
+
+  public readonly binSohUnit = computed(() => {
+    const data = this._partialPickingData();
+    const display = (data.binSOHDisplay ?? '').trim();
+    if (!display) {
+      return data.unitOfMeasure || '';
+    }
+
+    const parts = display.split(/\s+/).filter(Boolean);
+    if (parts.length <= 1) {
+      return data.unitOfMeasure || '';
+    }
+
+    return parts.slice(1).join(' ');
+  });
 
   // Progress bar configuration computed signal
   public readonly progressConfig = computed((): WeightProgressConfig => {

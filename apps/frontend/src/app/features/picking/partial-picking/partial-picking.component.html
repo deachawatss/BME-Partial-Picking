@@ -23,14 +23,14 @@
       <div class="header-field fg-field">
         <label class="field-label">FG Item Key</label>
         <div class="fg-cell">
-          <span class="fg-key">{{ partialPickingData().fgItemKey }}</span>
-          <span class="fg-desc">{{ partialPickingData().fgDescription }}</span>
+          <div class="fg-token fg-key">{{ partialPickingData().fgItemKey }}</div>
+          <div class="fg-token fg-desc">{{ partialPickingData().fgDescription }}</div>
         </div>
       </div>
     </div>
 
     <!-- Header Row 2: Batch No and Batches Info -->
-    <div class="header-row">
+    <div class="header-row header-row-with-tabs">
       <div class="header-field">
         <label class="field-label">Batch No</label>
         <div class="input-wrap">
@@ -48,6 +48,12 @@
           <span class="meta-box">{{ partialPickingData().productionDate }}</span>
         </div>
       </div>
+      <div class="header-tabs">
+        <div class="tab-strip">
+          <button type="button" class="tab-btn active">Pending to Picked</button>
+          <button type="button" class="tab-btn">Picked</button>
+        </div>
+      </div>
     </div>
 
     <!-- Main Content: Form Left, Table Right -->
@@ -57,13 +63,12 @@
           <tbody>
             <tr>
               <th scope="row">Item Key</th>
-              <td>
+              <td colspan="2">
                 <div class="input-wrap">
                   <input type="text" formControlName="itemKey" />
                   <button type="button" class="lookup-btn" (click)="onLookup('itemKey')" aria-label="Lookup item key">🔍</button>
                 </div>
               </td>
-              <td class="kg-label">KG</td>
             </tr>
             <tr>
               <th scope="row">Description</th>
@@ -95,8 +100,8 @@
               </td>
               <td class="soh-display">
                 <div class="soh-value-wrap">
-                  <span class="soh-value">{{ binSohValue() }}</span>
-                  <span class="soh-unit">{{ binSohUnit() }}</span>
+                  <div class="soh-token">{{ binSohValue() }}</div>
+                  <div class="soh-token soh-token-unit">{{ binSohUnit() }}</div>
                 </div>
               </td>
             </tr>
@@ -155,51 +160,45 @@
       </div>
 
       <div class="table-column">
-        <section class="table-panel">
-        <div class="table-panel-header">
-          <div class="table-title">Batch Ticket Partials</div>
-          <div class="tab-strip">
-            <button type="button" class="tab-btn active">Pending to Picked</button>
-            <button type="button" class="tab-btn">Picked</button>
-          </div>
+        <div class="table-panel">
+          <section class="table-panel-body">
+            <div class="table-scroll">
+              <table class="batch-table">
+                <colgroup>
+                  <col />
+                  <col />
+                  <col />
+                  <col />
+                  <col />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Batch No</th>
+                    <th>Partial</th>
+                    <th>Weighted</th>
+                    <th>Balance</th>
+                    <th>Allergens</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
+                    <tr (click)="onSelectBatchRow(i)" [class.selected]="item.item === 'INFULM01'">
+                      <td>{{ item.item }}</td>
+                      <td>{{ item.batchNo }}</td>
+                      <td class="numeric">{{ formatNumber(item.partial) }}</td>
+                      <td class="numeric">{{ formatNumber(item.weighted) }}</td>
+                      <td class="numeric">{{ formatNumber(item.balance) }}</td>
+                      <td>{{ item.allergens ?? 'None' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
-        <div class="table-scroll">
-          <table class="batch-table">
-            <colgroup>
-              <col />
-              <col />
-              <col />
-              <col />
-              <col />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Batch No</th>
-                <th>Partial</th>
-                <th>Weighted</th>
-                <th>Balance</th>
-                <th>Allergens</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of batchTicketPartials(); track item.batchNo; let i = $index) {
-                <tr (click)="onSelectBatchRow(i)" [class.selected]="item.item === 'INFULM01'">
-                  <td>{{ item.item }}</td>
-                  <td>{{ item.batchNo }}</td>
-                  <td class="numeric">{{ formatNumber(item.partial) }}</td>
-                  <td class="numeric">{{ formatNumber(item.weighted) }}</td>
-                  <td class="numeric">{{ formatNumber(item.balance) }}</td>
-                  <td>{{ item.allergens ?? 'None' }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-        </section>
       </div>
-    </div>
 
     <footer class="footer-actions">
       <div class="operator-info">

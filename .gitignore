@@ -54,9 +54,6 @@ pids
 *.seed
 *.pid.lock
 
-# Environment files
-.env
-.env.*
 
 # Temporary files
 *.tmp
